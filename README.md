@@ -1,4 +1,4 @@
-To run the webserver:
+###To run the webserver:
 
 	make sure flask is installed, run: pip3 install flask
 
@@ -6,3 +6,7 @@ To run the webserver:
 	this will start up the server similar to npm start
 
 	open the browser and go to localhost:80 to view the text returned from the server
+
+###To run moss script:
+* chmod ug+x moss
+* ./moss -l java file1 fil2 etc
