@@ -1,4 +1,4 @@
-###To run the webserver:
+### To run the webserver:
 
 	make sure flask is installed, run: pip3 install flask
 
@@ -7,6 +7,11 @@
 
 	open the browser and go to localhost:80 to view the text returned from the server
 
-###To run moss script:
+### To run moss script:
 * chmod ug+x moss
 * ./moss -l java file1 fil2 etc
+
+### Connecting to the EC2 instance
+* cd into the ssh directory
+* chmod +x aws.sh
+* ./aws.sh
