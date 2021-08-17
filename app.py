@@ -34,5 +34,15 @@ def signin():
     return access
 
 
+@app.route("/testfile", methods=['POST'])
+def receiveFile():
+    success = "upload failed"
+    for uploaded_file in request.files.getlist('file'):
+        if uploaded_file.filename != '':
+            uploaded_file.save("job_src/upload_test/" + uploaded_file.filename)
+            success = "upload successful"
+    return success
+
+
 if __name__ == "__main__":
     app.run(debug=True, host="0.0.0.0", port=80)
