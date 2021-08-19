@@ -34,15 +34,22 @@ def signin():
     return access
 
 
-@app.route("/testfile", methods=['POST'])
-def receiveFile():
-    success = "upload failed"
-    for uploaded_file in request.files.getlist('file'):
-        if uploaded_file.filename != '':
-            uploaded_file.save("job_src/upload_test/" + uploaded_file.filename)
-            success = "upload successful"
+@app.route("/uploadfile/", methods=['POST'])
+@app.route("/uploadfile/<course_code>/<job_name>", methods=['POST'])
+def receiveFile(course_code="none", job_name="None"):
+    success = "no files found"
+
+    if course_code != "none":
+        for uploaded_file in request.files.getlist('file'):
+            if uploaded_file.filename != '':
+                uploaded_file.save("job_src/" + course_code + "/" + job_name + "/" + uploaded_file.filename)
+                success = "upload successful"
+    else:
+        success = "no course code found"
+
     return success
 
 
 if __name__ == "__main__":
     app.run(debug=True, host="172.31.24.225", port=8080)
+    # app.run(debug=True, host="0.0.0.0", port=8080)
