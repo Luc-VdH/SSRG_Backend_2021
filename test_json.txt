@@ -1,0 +1,5 @@
+{
+    "username": "pathtest",
+    "password": "123",
+    "jobname": "pathtest_job"
+}

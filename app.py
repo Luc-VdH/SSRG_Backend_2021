@@ -1,3 +1,5 @@
+import json
+
 from flask import Flask, request, jsonify
 
 app = Flask(__name__)
@@ -34,18 +36,24 @@ def signin():
     return access
 
 
-@app.route("/uploadfile/", methods=['POST'])
-@app.route("/uploadfile/<course_code>/<job_name>", methods=['POST'])
-def receiveFile(course_code="none", job_name="None"):
+@app.route("/newjob", methods=['POST'])
+# @app.route("/uploadfile/<course_code>/<job_name>", methods=['POST'])
+def receiveFile():
     success = "no files found"
+    course_code = ""
+    username = ""
+    data = json.load(request.files['data'])
+    archive = request.files['file']
 
-    if course_code != "none":
-        for uploaded_file in request.files.getlist('file'):
-            if uploaded_file.filename != '':
-                uploaded_file.save("job_src/" + course_code + "/" + job_name + "/" + uploaded_file.filename)
-                success = "upload successful"
-    else:
-        success = "no course code found"
+    password = data.get('password', '')
+    username = data.get('username', '')
+    jobname = data.get('jobname', '')
+    # other job info like MOSS flags included here
+
+    # check password
+    if archive.filename != '':
+        success = "upload successful"
+        archive.save("job_src/" + username + "/" + jobname + "/" + archive.filename)
 
     return success
 
