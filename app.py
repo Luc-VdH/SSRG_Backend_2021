@@ -41,7 +41,6 @@ def signin():
 def receiveFile():
     success = "no files found"
     course_code = ""
-    username = ""
     data = json.load(request.files['data'])
     archive = request.files['file']
 
@@ -59,5 +58,5 @@ def receiveFile():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="172.31.24.225", port=8080)
-    # app.run(debug=True, host="0.0.0.0", port=8080)
+    # app.run(debug=True, host="172.31.24.225", port=8080)
+    app.run(debug=True, host="0.0.0.0", port=8080)
