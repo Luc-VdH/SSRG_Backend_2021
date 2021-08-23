@@ -40,29 +40,26 @@ def signin():
 # @app.route("/uploadfile/<course_code>/<job_name>", methods=['POST'])
 def receiveFile():
     success = "no files found"
-    course_code = ""
-    requestdata = request.form
+
     print(request.form.get('data'))
-    data = json.loads(request.form.get("data"))
+    data = json.loads(request.form.get('data'))
     print(data)
-    archive = request.files['file']
 
     password = data.get('password', '')
     username = data.get('username', '')
     jobname = data.get('jobname', '')
-    # password = data.password
-    # username = data.username
-    # jobname = data.jobname
+
     # other job info like MOSS flags included here
 
     # check password
-    if archive.filename != '':
-        success = "upload successful"
-        archive.save("job_src/" + username + "/" + jobname + "/" + archive.filename)
+    for archive in request.files.getlist('file'):
+        if archive.filename != '':
+            success = "upload successful"
+            archive.save("job_src/" + username + "/" + jobname + "/" + archive.filename)
 
     return success
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="172.31.24.225", port=8080)
-    # app.run(debug=True, host="0.0.0.0", port=8000)
+    # app.run(debug=True, host="172.31.24.225", port=8080)
+    app.run(debug=True, host="0.0.0.0", port=8000)
