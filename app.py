@@ -7,39 +7,48 @@ app = Flask(__name__)
 
 @app.route("/")
 def main():
-    return "Hello World"
+    return "Route Request to Student Similarity Report Generator"
 
 
-@app.route("/test")
-def test():
-    access = "denied!"
-    data = request.get_json()
-    username = data.get('username', '')
-    password = data.get('password', '')
-    # print(username, password)
-    if username == "test" and password == "123":
-        access = "granted!"
-    return access
-
-
-@app.route("/signin", methods=['GET'])
-def signin():
-    access = "denied!"
+@app.route("/login", methods=['GET'])
+def login():
     data = request.get_json()
     usernameIn = data.get('username', '')
     passwordIn = data.get('password', '')
-    file = open("usrs/" + usernameIn + ".txt")
-    passwordS = file.readline().strip()
-    print(passwordS)
+    # check if user exists
+    exists = True
+    if not exists:
+        return "user not found", 404
+
+    # get password from object
+    passwordS = "123"
+    print(usernameIn, passwordIn)
     if passwordIn == passwordS:
-        access = "granted!"
-    return access
+        return "Granted", 200
+    return "Denied!", 401
+
+
+@app.route("/signup", methods=['GET'])
+def signup():
+    data = request.get_json()
+    username_in = data.get('username', '')
+    password_in = data.get('password', '')
+    moss_id = data.get('mossid', '')
+
+    # check if user exists
+    exists = False
+    if exists:
+        return "user already exists", 401
+
+    # add user
+    print(username_in, password_in, moss_id)
+    return "user added", 200
 
 
 @app.route("/newjob", methods=['POST'])
 # @app.route("/uploadfile/<course_code>/<job_name>", methods=['POST'])
 def receiveFile():
-    success = "no files found"
+    files_found = False
 
     print(request.form.get('data'))
     data = json.loads(request.form.get('data'))
@@ -54,10 +63,12 @@ def receiveFile():
     # check password
     for archive in request.files.getlist('file'):
         if archive.filename != '':
-            success = "upload successful"
+            files_found = True
             archive.save("job_src/" + username + "/" + jobname + "/" + archive.filename)
 
-    return success
+    if files_found:
+        return "success", 200
+    return "no files found", 404
 
 
 if __name__ == "__main__":
