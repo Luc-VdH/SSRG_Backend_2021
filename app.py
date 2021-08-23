@@ -41,10 +41,10 @@ def signin():
 def receiveFile():
     success = "no files found"
     course_code = ""
-    requestdata = request.form.to_dict()
-    print(requestdata)
-    data = json.load(requestdata.data)
-    archive = requestdata.file
+    requestdata = request.form
+    print(request.form.get('data'))
+    data = json.loads(request.form.get('data'))
+    archive = request.form.get('file')
 
     password = data.get('password', '')
     username = data.get('username', '')
