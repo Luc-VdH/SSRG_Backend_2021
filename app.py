@@ -38,9 +38,9 @@ def login():
     return "Denied!", 401
 
 
-@app.route("/signup", methods=['GET'])
+@app.route("/signup", methods=['POST'])
 def signup():
-    data = request.headers
+    data = request.get_json()
     username_in = data.get('coursecode', '')
     password_in = data.get('password', '')
     moss_id = data.get('mossid', '')
@@ -63,16 +63,17 @@ def receiveFile():
     print(request.form.get('data'))
     data = json.loads(request.form.get('data'))
     print(data)
+    header = request.headers
 
-    password = data.get('password', '')
-    username = data.get('username', '')
+    password = header.get('password', '')
+    coursecode = header.get('coursecode', '')
     jobname = data.get('jobname', '')
     flag = data.get('flag', '')
 
     # other job info like MOSS flags included here
 
     # checking if user file directory exists
-    path = os.path.join("job_src", username, jobname)
+    path = os.path.join("job_src", coursecode, jobname)
     if not os.path.exists(path):
         os.makedirs(path)
     else:
@@ -93,7 +94,7 @@ def receiveFile():
     files = [os.path.join(path, x) for x in os.listdir(path)]
     print(" ".join(files))
 
-    jobHandler.createJob.delay(files, jobname, username, flag)
+    jobHandler.createJob.delay(files, jobname, coursecode, flag)
 
     return "success", 200
 
