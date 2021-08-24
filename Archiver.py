@@ -11,7 +11,7 @@ class Archiver:
         for file in files:
             filename, file_extension = os.path.splitext(file)
             if file_extension == ".zip":
-                os.system("unzip " + file)
+                os.system("unzip " + file.split("/")[-1])
                 # for f in os.listdir(filename): # go through files in archive
                 #     studentfolder = os.path.join(filename, f)
                 #     if not os.path.isfile(studentfolder):
