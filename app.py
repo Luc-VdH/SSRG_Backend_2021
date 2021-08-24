@@ -42,8 +42,10 @@ def login():
     return _corsify_actual_response(make_response("Incorrect password, please try again!", 401))
 
 
-@app.route("/signup", methods=['POST'])
+@app.route("/signup", methods=['POST', 'OPTIONS'])
 def signup():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
     data = request.get_json()
     username_in = data.get('coursecode', '')
     password_in = data.get('password', '')
@@ -52,12 +54,12 @@ def signup():
     # check if user exists
     exists = userDao.userExists(username_in)
     if exists:
-        return "That course code already exists, please login or choose a different course code.", 401
+        return _corsify_actual_response(make_response("That course code already exists, please login or choose a different course code.", 401))
 
     # add user
     print(username_in, password_in, moss_id)
     userDao.addUser(username_in, password_in, moss_id)
-    return "User successfully added, signing in now", 200
+    return _corsify_actual_response(make_response("User successfully added, signing in now", 200))
 
 
 @app.route("/newjob", methods=['POST', 'OPTIONS'])
