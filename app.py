@@ -5,10 +5,12 @@ from celery import Celery
 from flask import Flask, request, jsonify
 
 from JobHandler import JobHandler
+from UserDAO import UserDAO
 
 app = Flask(__name__)
 
 jobHandler = JobHandler()
+userDao = UserDAO()
 
 
 @app.route("/")
@@ -26,14 +28,13 @@ def login():
     usernameIn = header.get('coursecode', '')
     passwordIn = header.get('password', '')
     # check if user exists
-    exists = True
+    exists = userDao.userExists(usernameIn)
     if not exists:
         return "user not found", 404
 
     # get password from object
-    passwordS = "123"
-    print(usernameIn, passwordIn)
-    if passwordIn == passwordS:
+    access = userDao.signIn(usernameIn, passwordIn)
+    if access == 1:
         return "Granted", 200
     return "Denied!", 401
 

@@ -3,17 +3,19 @@ class User:
     __password = "none"
     __mossid = "none"
 
-    def __init__(self, username):
+    def __init__(self, username, password, mossid):
         self.__username = username
-        file = open("usrs/" + username + ".txt", "r")
-        __password = file.readline()
-        __mossid = file.readline()
+        self.__password = password
+        self.__mossid = username
 
     def getPassword(self):
         return self.__password
 
     def getMossid(self):
         return self.__mossid
+
+    def getCoursecode(self):
+        return self.__username
 
     def save(self):
         file = open("usrs/" + self.__username + ".txt", "w")
