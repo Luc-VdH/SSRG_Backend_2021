@@ -91,7 +91,7 @@ def receiveFile():
             os.makedirs(path)
         else:
             print(path + ' is valid')
-    
+
         # save files to path
         for archive in request.files.getlist('file[]'):
             if archive.filename != '':
