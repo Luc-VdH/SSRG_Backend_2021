@@ -32,13 +32,13 @@ def login():
     # check if user exists
     exists = userDao.userExists(usernameIn)
     if not exists:
-        return _corsify_actual_response(make_response("user not found", 404))
+        return _corsify_actual_response(make_response("Course code not found, please sign up", 404))
 
     # get password from object
     access = userDao.signIn(usernameIn, passwordIn)
     if access == 1:
-        return _corsify_actual_response(make_response("Granted", 200))
-    return _corsify_actual_response(make_response("Denied!", 401))
+        return _corsify_actual_response(make_response("Course code found, password correct, access granted!", 200))
+    return _corsify_actual_response(make_response("Incorrect password, please try again!", 401))
 
 
 @app.route("/signup", methods=['POST'])
@@ -51,16 +51,19 @@ def signup():
     # check if user exists
     exists = False
     if exists:
-        return "user already exists", 401
+        return "That course code already exists, please login or choose a different course code.", 401
 
     # add user
     print(username_in, password_in, moss_id)
-    return "user added", 200
+    return "User successfully added, signing in now", 200
 
 
-@app.route("/newjob", methods=['POST'])
+@app.route("/newjob", methods=['POST', 'OPTIONS'])
 # @app.route("/uploadfile/<course_code>/<job_name>", methods=['POST'])
 def receiveFile():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
     files_found = False
 
     print(request.form.get('data'))
@@ -92,14 +95,15 @@ def receiveFile():
                 archive.save(os.path.join(path, archive.filename))
 
     if not files_found:
-        return "no files found", 404
+        return _corsify_actual_response(make_response("No files found, please upload source code files.", 404))
 
     files = [os.path.join(path, x) for x in os.listdir(path)]
     print(" ".join(files))
 
     jobHandler.createJob.delay(files, jobname, coursecode, flag)
 
-    return "success", 200
+    return _corsify_actual_response(make_response("Job successfully created and started, please wait for the job to "
+                                                  "complete.", 200))
 
 
 def _build_cors_prelight_response():
