@@ -10,6 +10,7 @@ app = Flask(__name__)
 
 jobHandler = JobHandler()
 
+
 @app.route("/")
 def main():
     return "Route Request to Student Similarity Report Generator"
@@ -17,9 +18,13 @@ def main():
 
 @app.route("/login", methods=['GET'])
 def login():
-    data = request.get_json()
-    usernameIn = data.get('username', '')
-    passwordIn = data.get('password', '')
+    # data = request.get_json()
+    # usernameIn = data.get('username', '')
+    # passwordIn = data.get('password', '')
+
+    header = request.headers
+    usernameIn = header.get('coursecode', '')
+    passwordIn = header.get('password', '')
     # check if user exists
     exists = True
     if not exists:
@@ -35,8 +40,8 @@ def login():
 
 @app.route("/signup", methods=['GET'])
 def signup():
-    data = request.get_json()
-    username_in = data.get('username', '')
+    data = request.headers
+    username_in = data.get('coursecode', '')
     password_in = data.get('password', '')
     moss_id = data.get('mossid', '')
 
@@ -65,34 +70,34 @@ def receiveFile():
     flag = data.get('flag', '')
 
     # other job info like MOSS flags included here
-	
-	#checking if user file directory exists
-    path = os.path.join("job_src",username , jobname)
+
+    # checking if user file directory exists
+    path = os.path.join("job_src", username, jobname)
     if not os.path.exists(path):
         os.makedirs(path)
     else:
         print(path + ' is valid')
-	
+
     # TODO check password
-    
-    #save files to path
+
+    # save files to path
     for archive in request.files.getlist('file[]'):
-    	if archive.filename != '':
+        if archive.filename != '':
             files_found = True
             if not os.path.exists(os.path.join(path, archive.filename)):
                 archive.save(os.path.join(path, archive.filename))
-    
+
     if not files_found:
         return "no files found", 404
-        
+
     files = [os.path.join(path, x) for x in os.listdir(path)]
     print(" ".join(files))
-    
+
     jobHandler.createJob.delay(files, jobname, username, flag)
-        
+
     return "success", 200
 
 
 if __name__ == "__main__":
-    # app.run(debug=True, host="172.31.24.225", port=8080)
-    app.run(debug=True, host="0.0.0.0", port=8000)
+    app.run(debug=True, host="172.31.24.225", port=8080)
+    # app.run(debug=True, host="0.0.0.0", port=8000)
