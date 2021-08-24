@@ -2,7 +2,7 @@ import json
 import os
 
 from celery import Celery
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 
 from JobHandler import JobHandler
 from UserDAO import UserDAO
@@ -18,11 +18,13 @@ def main():
     return "Route Request to Student Similarity Report Generator"
 
 
-@app.route("/login", methods=['GET'])
+@app.route("/login", methods=['GET', 'OPTIONS'])
 def login():
     # data = request.get_json()
     # usernameIn = data.get('username', '')
     # passwordIn = data.get('password', '')
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
 
     header = request.headers
     usernameIn = header.get('coursecode', '')
@@ -30,13 +32,13 @@ def login():
     # check if user exists
     exists = userDao.userExists(usernameIn)
     if not exists:
-        return "user not found", 404
+        return _corsify_actual_response(make_response("user not found", 404))
 
     # get password from object
     access = userDao.signIn(usernameIn, passwordIn)
     if access == 1:
-        return "Granted", 200
-    return "Denied!", 401
+        return _corsify_actual_response(make_response("Granted", 200))
+    return _corsify_actual_response(make_response("Denied!", 401))
 
 
 @app.route("/signup", methods=['POST'])
@@ -98,6 +100,19 @@ def receiveFile():
     jobHandler.createJob.delay(files, jobname, coursecode, flag)
 
     return "success", 200
+
+
+def _build_cors_prelight_response():
+    response = make_response()
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    response.headers.add('Access-Control-Allow-Headers', "*")
+    response.headers.add('Access-Control-Allow-Methods', "*")
+    return response
+
+
+def _corsify_actual_response(response):
+    response.headers.add("Access-Control-Allow-Origin", "*")
+    return response
 
 
 if __name__ == "__main__":
