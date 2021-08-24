@@ -108,6 +108,53 @@ def receiveFile():
                                                   "complete.", 200))
 
 
+@app.route("/getalljobs", methods=['GET', 'OPTIONS'])
+def getalljobs():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    header = request.headers
+    username = header.get('coursecode', '')
+    password = header.get('password', '')
+    # check if user exists
+    exists = userDao.userExists(username)
+    if not exists:
+        return _corsify_actual_response(make_response("Course code not found", 404))
+
+    # get password from object
+    access = userDao.signIn(username, password)
+    if access == 1:
+        return _corsify_actual_response(make_response("all the things", 200))
+
+    return _corsify_actual_response(make_response("Incorrect password", 401))
+
+
+@app.route("/getreport", methods=['GET', 'OPTIONS'])
+def getreport():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    header = request.headers
+    username = header.get('coursecode', '')
+    password = header.get('password', '')
+    jobname = header.get('jobname', '')
+
+    # check if user exists
+    exists = userDao.userExists(username)
+    if not exists:
+        return _corsify_actual_response(make_response("Course code not found", 404))
+
+    # get password from object
+    access = userDao.signIn(username, password)
+    if access == 1:
+        # get report
+        if True:
+            return _corsify_actual_response(make_response("Report", 200))
+        else:
+            return _corsify_actual_response(make_response("No report found", 404))
+    return _corsify_actual_response(make_response("Incorrect password", 401))
+
+
 def _build_cors_prelight_response():
     response = make_response()
     response.headers.add("Access-Control-Allow-Origin", "*")
