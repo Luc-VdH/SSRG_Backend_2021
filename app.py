@@ -79,35 +79,37 @@ def receiveFile():
     coursecode = header.get('coursecode', '')
     jobname = data.get('jobname', '')
     flag = data.get('flag', '')
+    exists = userDao.userExists(coursecode)
+    if not exists:
+        return _corsify_actual_response(make_response("Course code not found", 404))
 
-    # other job info like MOSS flags included here
+    access = userDao.signIn(coursecode, password)
+    if access == 1:
+        # checking if user file directory exists
+        path = os.path.join("job_src", coursecode, jobname)
+        if not os.path.exists(path):
+            os.makedirs(path)
+        else:
+            print(path + ' is valid')
+    
+        # save files to path
+        for archive in request.files.getlist('file[]'):
+            if archive.filename != '':
+                files_found = True
+                if not os.path.exists(os.path.join(path, archive.filename)):
+                    archive.save(os.path.join(path, archive.filename))
 
-    # checking if user file directory exists
-    path = os.path.join("job_src", coursecode, jobname)
-    if not os.path.exists(path):
-        os.makedirs(path)
-    else:
-        print(path + ' is valid')
+        if not files_found:
+            return _corsify_actual_response(make_response("No files found, please upload source code files.", 404))
 
-    # TODO check password
+        files = [os.path.join(path, x) for x in os.listdir(path)]
+        print(" ".join(files))
 
-    # save files to path
-    for archive in request.files.getlist('file[]'):
-        if archive.filename != '':
-            files_found = True
-            if not os.path.exists(os.path.join(path, archive.filename)):
-                archive.save(os.path.join(path, archive.filename))
+        jobHandler.createJob.delay(files, jobname, coursecode, flag)
 
-    if not files_found:
-        return _corsify_actual_response(make_response("No files found, please upload source code files.", 404))
-
-    files = [os.path.join(path, x) for x in os.listdir(path)]
-    print(" ".join(files))
-
-    jobHandler.createJob.delay(files, jobname, coursecode, flag)
-
-    return _corsify_actual_response(make_response("Job successfully created and started, please wait for the job to "
-                                                  "complete.", 200))
+        return _corsify_actual_response(make_response("Job successfully created and started, please wait for the job "
+                                                      "to complete.", 200))
+    return _corsify_actual_response(make_response("Incorrect password", 401))
 
 
 @app.route("/getalljobs", methods=['GET', 'OPTIONS'])
