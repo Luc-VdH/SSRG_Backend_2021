@@ -15,3 +15,10 @@
 * cd into the ssh directory
 * chmod +x aws.sh
 * ./aws.sh
+
+### To run Celery
+    need to download rabbitmq and celery:
+        sudo apt-get install rabbitmq-server
+        pip install celery
+	in a terminal run:
+		celery -A tasks worker --loglevel=info
