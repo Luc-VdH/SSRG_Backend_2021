@@ -49,12 +49,13 @@ def signup():
     moss_id = data.get('mossid', '')
 
     # check if user exists
-    exists = False
+    exists = userDao.userExists(username_in)
     if exists:
         return "That course code already exists, please login or choose a different course code.", 401
 
     # add user
     print(username_in, password_in, moss_id)
+    userDao.addUser(username_in, password_in, moss_id)
     return "User successfully added, signing in now", 200
 
 

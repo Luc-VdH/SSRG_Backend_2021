@@ -8,8 +8,10 @@ class UserDAO:
     def __init__(self):
         pass
 
-    def addUser(self):
-        pass
+    def addUser(self, coursecode, password, mossid):
+        user = User(coursecode, password, mossid)
+        user.save()
+        self.__users.append(user)
 
     def signIn(self, coursecode, password):
         index = self.getUserIndex(coursecode)

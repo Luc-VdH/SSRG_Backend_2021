@@ -21,4 +21,4 @@
         sudo apt-get install rabbitmq-server
         pip install celery
 	in a terminal run:
-		celery -A tasks worker --loglevel=info
+		celery -A JobHandler worker --loglevel=info
