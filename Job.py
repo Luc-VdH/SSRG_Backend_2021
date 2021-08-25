@@ -7,7 +7,7 @@ from time import sleep
 
 
 class Job:
-
+    
     def __init__(self, files, reportName, username, flag):
         self.files = " ".join(files)
         self.reportName = reportName
@@ -63,7 +63,15 @@ class Job:
         # file = open("reports/" + self.username + "/" + self.reportName + "/reportObject.txt", "w")
         # file.write("1\n" + self.urlOfRawReport + "\n" + "")
         # file.close()
-        url = "http://192.168.174.128:8000/updatereport"
+        
+        user = subprocess.check_output("whoami", shell=True).decode("utf-8")
+        if (user.strip() == "ubuntu"):
+            host="172.31.24.225"
+        else:
+            host = "0.0.0.0"
+        
+        url = f"http://{host}:8000/updatereport"
+        print(url)
         req = request.Request(url, method="POST")
         req.add_header('Content-Type', 'application/json')
         data = {
