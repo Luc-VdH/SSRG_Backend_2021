@@ -53,7 +53,7 @@ class ReportDAO:
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             return -10
-        self.reports[index].refresh()
+        # self.reports[index].refresh()
         return self.reports[index].getRawReport()  # TODO: scraped
 
     def deleteReport(self, name, coursecode):
