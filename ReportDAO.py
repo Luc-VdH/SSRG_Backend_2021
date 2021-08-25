@@ -64,7 +64,7 @@ class ReportDAO:
         return True
 
     def getAllJobs(self, coursecode):
-        self.initReports()
+        #self.initReports()
         jobs = ""
         for x in self.reports:
             if x.getCoursecode() == coursecode:
