@@ -15,6 +15,7 @@ reportDAO = ReportDAO()
 userDao = UserDAO()
 jobHandler = JobHandler()
 
+
 @app.route("/")
 def main():
     return "Route Request to Student Similarity Report Generator"
@@ -39,7 +40,8 @@ def login():
     # get password from object
     access = userDao.signIn(usernameIn, passwordIn)
     if access == 1:
-        return _corsify_actual_response(make_response('{"status": "Course code found, password correct, access granted!"}', 200))
+        return _corsify_actual_response(
+            make_response('{"status": "Course code found, password correct, access granted!"}', 200))
     return _corsify_actual_response(make_response('{"error": "Incorrect password, please try again!"', 401))
 
 
@@ -55,7 +57,8 @@ def signup():
     # check if user exists
     exists = userDao.userExists(username_in)
     if exists:
-        return _corsify_actual_response(make_response('{"error": "That course code already exists, please login or choose a different course code."}', 401))
+        return _corsify_actual_response(make_response(
+            '{"error": "That course code already exists, please login or choose a different course code."}', 401))
 
     # add user
     print(username_in, password_in, moss_id)
@@ -83,7 +86,7 @@ def receiveFile():
     exists = userDao.userExists(coursecode)
     if not exists:
         return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
-    
+
     access = userDao.signIn(coursecode, password)
     if access == 1:
         # checking if user file directory exists
@@ -100,18 +103,22 @@ def receiveFile():
                     archive.save(os.path.join(path, archive.filename))
 
         if not files_found:
-            return _corsify_actual_response(make_response('{"error": "No files found, please upload source code files."}', 404))
-        
-        #TODO: Archive
-        
+            return _corsify_actual_response(
+                make_response('{"error": "No files found, please upload source code files."}', 404))
+
+        # TODO: Archive
+
         files = [os.path.join(path, x) for x in os.listdir(path)]
         print(" ".join(files))
 
         reportDAO.addReport(jobname, coursecode)
         jobHandler.createJob.delay(files, jobname, coursecode, flag)
 
-        return _corsify_actual_response(make_response('{"status": "Job successfully created and started, please wait for the job to complete."}', 200))
+        return _corsify_actual_response(
+            make_response('{"status": "Job successfully created and started, please wait for the job to complete."}',
+                          200))
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
+
 
 @app.route("/getalljobs", methods=['GET', 'OPTIONS'])
 def getalljobs():
@@ -164,16 +171,17 @@ def getreport():
 
 @app.route("/updatereport", methods=['POST'])
 def updatereport():
-	data = request.get_json()
-	if data.get('id', '')!="BackendSSRG1":
-		return 'Invalid ID'
-		
-	reportName=data.get('reportName', '')
-	rawurl=data.get('rawurl', '')
-	coursecode=data.get('coursecode', '')
-	status=data.get('status', '')
-	reportDAO.updateReport(reportName, coursecode, status, rawurl)
-	return 'Updated'
+    data = request.get_json()
+    if data.get('id', '') != "BackendSSRG1":
+        return 'Invalid ID'
+
+    reportName = data.get('reportName', '')
+    rawurl = data.get('rawurl', '')
+    coursecode = data.get('coursecode', '')
+    status = data.get('status', '')
+    reportDAO.updateReport(reportName, coursecode, status, rawurl)
+    return 'Updated'
+
 
 def _build_cors_prelight_response():
     response = make_response()
@@ -187,10 +195,11 @@ def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
 
+
 if __name__ == "__main__":
-    user = subprocess.check_output("whoami", shell=True).decode("utf-8") 
+    user = subprocess.check_output("whoami", shell=True).decode("utf-8")
     print("Running on:", user)
-    if(user.strip() == "ubuntu"):
+    if (user.strip() == "ubuntu"):
         app.run(debug=True, host="172.31.24.225", port=8080)
     else:
         app.run(debug=True, host="0.0.0.0", port=8000)
