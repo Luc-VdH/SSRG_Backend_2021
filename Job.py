@@ -56,7 +56,7 @@ class Job:
 	def updateReportDAO(self):
 		#self.report.addRawURL(self.urlOfRawReport)
 		file = open("reports/" + self.username + "/" + self.reportName + "/reportObject.txt", "w")
-		file.write(f"{1}\n{self.urlOfRawReport}\n{self.urlOfScrappedReport}")
+		file.write("1\n" + self.urlOfRawReport + "\n" + "")
 		file.close()
 		print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
 		#TODO
