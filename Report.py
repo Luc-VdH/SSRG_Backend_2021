@@ -44,6 +44,10 @@ class Report:
         self.writeToFile()
 
     def writeToFile(self):
+        path = os.path.join("reports", self.coursecode, self.reportName)
+        if not os.path.exists(path):
+            print('Making directory: ' + path)
+            os.makedirs(path)
         f = open(f"reports/{self.coursecode}/{self.reportName}/reportObject.txt", "w")
         f.write(f"{self.status}\n{self.urlOfRawReport}\n{self.urlOfScrappedReport}")
         f.close()

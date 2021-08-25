@@ -28,7 +28,8 @@ class ReportDAO:
         print("Initilising all reports")
 
     def addReport(self, name, coursecode):
-        self.reports.append(Report(name, coursecode))
+        report = Report(name, coursecode)
+        self.reports.append(report)
 
     def getReportIndex(self, name, coursecode):
         count = 0

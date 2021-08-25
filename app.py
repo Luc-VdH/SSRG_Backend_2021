@@ -77,8 +77,8 @@ def receiveFile():
     print(data)
     header = request.headers
 
-    password = data.get('password', '')
-    coursecode = data.get('coursecode', '')
+    password = header.get('password', '')
+    coursecode = header.get('coursecode', '')
     jobname = data.get('jobname', '')
     flag = data.get('flag', '')
     exists = userDao.userExists(coursecode)
@@ -107,9 +107,10 @@ def receiveFile():
         
         files = [os.path.join(path, x) for x in os.listdir(path)]
         print(" ".join(files))
-        
+
+        reportDAO.addReport(jobname, coursecode)
         jobHandler.createJob.delay(files, jobname, coursecode, flag)
-        
+
         return _corsify_actual_response(make_response("Job successfully created and started, please wait for the job "
                                                       "to complete.", 200))
     return _corsify_actual_response(make_response("Incorrect password", 401))
