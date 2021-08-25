@@ -1,12 +1,13 @@
 from ReportScraper import ReportScraper
 import subprocess   
+from urllib import request
+import json
 
 
 from time import sleep
 
 class Job:
 	
-	reportDAO = None
 	
 	def __init__(self, files, reportName, username, flag):
 		self.files = " ".join(files)
@@ -20,9 +21,6 @@ class Job:
 		
 		#Job.reportDAO.addReport(reportName, username)
 		#self.report = Job.reportDAO.getReport(reportName, username)
-	
-	def setReportDAO(reportDAO):
-		Job.reportDAO = reportDAO
 		
 	
 	def start(self):
@@ -41,9 +39,10 @@ class Job:
 		if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
 			#self.report.jobFailed()
 			print(f'Job Failed: {self.urlOfRawReport}')
+			self.urlOfRawReport = ''
 		    #TODO Handle 
 		else:
-			print('Received Moss Response')
+			print('Received Moss Response\nURL set to '+self.urlOfRawReport)
 		
 	def emailJobComplete(self):
 	    #TODO
@@ -55,9 +54,24 @@ class Job:
 	
 	def updateReportDAO(self):
 		#self.report.addRawURL(self.urlOfRawReport)
-		file = open("reports/" + self.username + "/" + self.reportName + "/reportObject.txt", "w")
-		file.write("1\n" + self.urlOfRawReport + "\n" + "")
-		file.close()
+		#file = open("reports/" + self.username + "/" + self.reportName + "/reportObject.txt", "w")
+        #file.write("1\n" + self.urlOfRawReport + "\n" + "")
+        #file.close()
+		url = "http://192.168.174.128:8000/updatereport"
+		req = request.Request(url, method="POST")
+		req.add_header('Content-Type', 'application/json')
+		data = {
+			"id": "BackendSSRG1",
+			"reportName": self.reportName,
+			"coursecode": self.username,
+			"status": 1,
+			"rawurl": self.urlOfRawReport
+		}
+		data = json.dumps(data)
+		data = data.encode()
+		r = request.urlopen(req, data=data)
+		content = r.read()
+		print(content)
 		print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
 		#TODO
 

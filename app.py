@@ -14,7 +14,6 @@ app = Flask(__name__)
 reportDAO = ReportDAO()
 userDao = UserDAO()
 jobHandler = JobHandler()
-jobHandler.setReportDAO(reportDAO)
 
 @app.route("/")
 def main():
@@ -114,7 +113,6 @@ def receiveFile():
         return _corsify_actual_response(make_response('{"status": "Job successfully created and started, please wait for the job to complete."}', 200))
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
-
 @app.route("/getalljobs", methods=['GET', 'OPTIONS'])
 def getalljobs():
     if request.method == "OPTIONS":  # CORS preflight
@@ -164,6 +162,19 @@ def getreport():
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
 
+@app.route("/updatereport", methods=['POST'])
+def updatereport():
+	data = request.get_json()
+	if data.get('id', '')!="BackendSSRG1":
+		return 'Invalid ID'
+		
+	reportName=data.get('reportName', '')
+	rawurl=data.get('rawurl', '')
+	coursecode=data.get('coursecode', '')
+	status=data.get('status', '')
+	reportDAO.updateReport(reportName, coursecode, status, rawurl)
+	return 'Updated'
+
 def _build_cors_prelight_response():
     response = make_response()
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -175,7 +186,6 @@ def _build_cors_prelight_response():
 def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
     return response
-
 
 if __name__ == "__main__":
     user = subprocess.check_output("whoami", shell=True).decode("utf-8") 

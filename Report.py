@@ -37,6 +37,7 @@ class Report:
 
     def jobFailed(self):
         self.status = Report.FAILED
+        self.writeToFile()
 
     def addRawURL(self, url):
         self.urlOfRawReport = url

@@ -10,9 +10,6 @@ class JobHandler:
 	def __init__(self):
 	    pass
 	
-	def setReportDAO(self, reportDAO):
-		Job.setReportDAO(reportDAO)
-	
 	@app.task
 	def createJob(files, reportName, username, flags):
 		archiver = Archiver()

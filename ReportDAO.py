@@ -71,6 +71,15 @@ class ReportDAO:
                 jobs += x.getJob() + ", "
         return "[" + jobs[:len(jobs)-2] + "]"
 
-
+    def updateReport(self, name, coursecode, status, url):
+        index = self.getReportIndex(name, coursecode)
+        if index == -1:
+            return False
+        if status == -1:
+            self.reports[index].jobFailed()
+        else:
+            self.reports[index].addRawURL(url)
+		
+		
 
 
