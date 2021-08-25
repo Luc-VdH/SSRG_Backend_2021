@@ -158,7 +158,7 @@ def getreport():
     if access == 1:
         # get report
         if True:
-            return _corsify_actual_response(make_response("Report", 200))
+            return _corsify_actual_response(make_response('{"rawurl": "www.google.com"}', 200))
         else:
             return _corsify_actual_response(make_response("No report found", 404))
     return _corsify_actual_response(make_response("Incorrect password", 401))
