@@ -24,7 +24,7 @@ class Report:
         if self.status == Report.COMPLETE:
             return self.urlOfRawReport
         else:
-            return ''
+            return 'www.google.com'
 
     def getScrappedReport(self):
         if self.status == Report.COMPLETE:
@@ -54,11 +54,20 @@ class Report:
 
     def getJob(self):
         if self.status == Report.PROCCESSING:
-            return '{"name":"' + self.reportName + '","status":"' + "Processing" + '","submissionDate":"' + "10/20/2000" +'"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Processing" + '","submissionDate":"' + "10/20/2000" + '"}'
         elif self.status == Report.COMPLETE:
-            return '{"name":"' + self.reportName + '","status":"' + "Complete" + '","submissionDate":"' + "10/20/2000" +'"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Complete" + '","submissionDate":"' + "10/20/2000" + '"}'
         else:
-            return '{"name":"' + self.reportName + '","status":"' + "Failed" + '","submissionDate":"' + "10/20/2000" +'"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Failed" + '","submissionDate":"' + "10/20/2000" + '"}'
 
     def delete(self):
         os.remove(f"reports/{self.coursecode}/{self.reportName}.txt")
+
+    def refresh(self):
+        file = open("reports/" + self.coursecode + "/" + self.reportName + "/reportObject.txt", "w")
+        s = file.readline().strip()
+        r = file.readline().strip()
+        sc = file.readline().strip()
+        self.status = int(s)
+        self.urlOfRawReport = r
+        self.urlOfScrappedReport = sc

@@ -43,14 +43,17 @@ class ReportDAO:
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             return -10
+        self.reports[index].refresh()
         return self.reports[index].checkStatus()
 
     def getReport(self, name, coursecode):
-        return "www.google.com"
+        self.initReports()
+        # return "www.google.com"
         # just a placeholder for the api this statement will be removed when we actually have reports to get
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             return -10
+        self.reports[index].refresh()
         return self.reports[index].getRawReport()  # TODO: scraped
 
     def deleteReport(self, name, coursecode):
@@ -67,5 +70,7 @@ class ReportDAO:
             if x.getCoursecode() == coursecode:
                 jobs += x.getJob() + ", "
         return "[" + jobs[:len(jobs)-2] + "]"
+
+
 
 
