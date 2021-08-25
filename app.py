@@ -131,7 +131,8 @@ def getalljobs():
     # get password from object
     access = userDao.signIn(username, password)
     if access == 1:
-        return _corsify_actual_response(make_response("all the things", 200))
+        reportDAO.initReports()
+        return _corsify_actual_response(make_response(reportDAO.getAllJobs(username), 200))
 
     return _corsify_actual_response(make_response("Incorrect password", 401))
 
