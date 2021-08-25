@@ -52,7 +52,7 @@ class ReportDAO:
         # just a placeholder for the api this statement will be removed when we actually have reports to get
         index = self.getReportIndex(name, coursecode)
         if index == -1:
-            return -10
+            return "www.google.com"
         # self.reports[index].refresh()
         return self.reports[index].getRawReport()  # TODO: scraped
 
