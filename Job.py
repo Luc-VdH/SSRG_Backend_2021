@@ -35,7 +35,7 @@ class Job:
 	
 	def uploadFilesToMoss(self):
 		print('Files Uploading')
-		cmd = f"moss -l {self.flag} {self.files}"
+		cmd = f"./moss -l {self.flag} {self.files}"
 		output = subprocess.getoutput(cmd)
 		self.urlOfRawReport = output.split('\n')[-1]
 		if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
