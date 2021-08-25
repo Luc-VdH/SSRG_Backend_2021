@@ -2,10 +2,16 @@ from celery import Celery
 
 from Archiver import Archiver
 from Job import Job
+from ReportDAO import ReportDAO
 
 app = Celery('createJob', broker='amqp://guest@localhost//')
 
 class JobHandler:
+	def __init__(self):
+	    pass
+	
+	def setReportDAO(self, reportDAO):
+		Job.setReportDAO(reportDAO)
 	
 	@app.task
 	def createJob(files, reportName, username, flags):

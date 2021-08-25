@@ -7,12 +7,14 @@ from flask import Flask, request, jsonify, make_response
 
 from JobHandler import JobHandler
 from UserDAO import UserDAO
+from ReportDAO import ReportDAO
 
 app = Flask(__name__)
 
-jobHandler = JobHandler()
+reportDAO = ReportDAO()
 userDao = UserDAO()
-
+jobHandler = JobHandler()
+jobHandler.setReportDAO(reportDAO)
 
 @app.route("/")
 def main():
@@ -75,22 +77,21 @@ def receiveFile():
     print(data)
     header = request.headers
 
-    password = header.get('password', '')
-    coursecode = header.get('coursecode', '')
+    password = data.get('password', '')
+    coursecode = data.get('coursecode', '')
     jobname = data.get('jobname', '')
     flag = data.get('flag', '')
     exists = userDao.userExists(coursecode)
     if not exists:
         return _corsify_actual_response(make_response("Course code not found", 404))
-
+    
     access = userDao.signIn(coursecode, password)
     if access == 1:
         # checking if user file directory exists
         path = os.path.join("job_src", coursecode, jobname)
         if not os.path.exists(path):
+            print('Making directory: ' + path)
             os.makedirs(path)
-        else:
-            print(path + ' is valid')
 
         # save files to path
         for archive in request.files.getlist('file[]'):
@@ -101,12 +102,14 @@ def receiveFile():
 
         if not files_found:
             return _corsify_actual_response(make_response("No files found, please upload source code files.", 404))
-
+        
+        #TODO: Archive
+        
         files = [os.path.join(path, x) for x in os.listdir(path)]
         print(" ".join(files))
-
+        
         jobHandler.createJob.delay(files, jobname, coursecode, flag)
-
+        
         return _corsify_actual_response(make_response("Job successfully created and started, please wait for the job "
                                                       "to complete.", 200))
     return _corsify_actual_response(make_response("Incorrect password", 401))

@@ -1,9 +1,13 @@
 from ReportScraper import ReportScraper
-import subprocess
+import subprocess   
+
 
 from time import sleep
 
 class Job:
+	
+	reportDAO = None
+	
 	def __init__(self, files, reportName, username, flag):
 		self.files = " ".join(files)
 		self.reportName = reportName
@@ -12,6 +16,14 @@ class Job:
 		
 		self.reportScraper = ReportScraper()
 		self.urlOfRawReport = ''
+		
+		
+		#Job.reportDAO.addReport(reportName, username)
+		#self.report = Job.reportDAO.getReport(reportName, username)
+	
+	def setReportDAO(reportDAO):
+		Job.reportDAO = reportDAO
+		
 	
 	def start(self):
 		print('Started Job: ' + self.reportName)
@@ -27,7 +39,8 @@ class Job:
 		output = subprocess.getoutput(cmd)
 		self.urlOfRawReport = output.split('\n')[-1]
 		if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
-		    print('Error')
+			#self.report.jobFailed()
+			print(f'Job Failed: {self.urlOfRawReport}')
 		    #TODO Handle 
 		else:
 			print('Received Moss Response')
@@ -37,10 +50,11 @@ class Job:
 		print('Job Complete (email)')
 	
 	def scrapeReport(self):
-		self.reportScraper.scrapeReport(self.urlOfRawReport)
+		#self.reportScraper.scrapeReport(self.urlOfRawReport,f"reports/{self.coursecode}/{self.reportName}/")
+		print("SCRAPE")
 	
 	def updateReportDAO(self):
-		print('updated ReportDAO')
+		#self.report.addRawURL(self.urlOfRawReport)
+		print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
 		#TODO
-		print(self.urlOfRawReport)
 
