@@ -35,11 +35,14 @@ class Job:
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         p.wait()
         out, err = p.communicate()
-        word = str(out)
-        all = word.split("\"")[-2]
-        url = all.split("http")[-1]
-        url = "http" + url
-        url = url[:-2]
+        word = out.decode("utf-8")
+        print(word)
+        url = "http"+(word.split("http")[-1])
+        #word = str(out)
+        #all = word.split("\"")[-2]
+        #url = all.split("http")[-1]
+        #url = "http" + url
+        #url = url[:-2]
         print(url)
         self.urlOfRawReport = url
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
