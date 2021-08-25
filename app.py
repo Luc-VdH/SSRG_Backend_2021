@@ -35,13 +35,13 @@ def login():
     # check if user exists
     exists = userDao.userExists(usernameIn)
     if not exists:
-        return _corsify_actual_response(make_response("Course code not found, please sign up", 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found, please sign up"}', 404))
 
     # get password from object
     access = userDao.signIn(usernameIn, passwordIn)
     if access == 1:
-        return _corsify_actual_response(make_response("Course code found, password correct, access granted!", 200))
-    return _corsify_actual_response(make_response("Incorrect password, please try again!", 401))
+        return _corsify_actual_response(make_response('{"status": "Course code found, password correct, access granted!"}', 200))
+    return _corsify_actual_response(make_response('{"error": "Incorrect password, please try again!"', 401))
 
 
 @app.route("/signup", methods=['POST', 'OPTIONS'])
@@ -56,12 +56,12 @@ def signup():
     # check if user exists
     exists = userDao.userExists(username_in)
     if exists:
-        return _corsify_actual_response(make_response("That course code already exists, please login or choose a different course code.", 401))
+        return _corsify_actual_response(make_response('{"error": "That course code already exists, please login or choose a different course code."}', 401))
 
     # add user
     print(username_in, password_in, moss_id)
     userDao.addUser(username_in, password_in, moss_id)
-    return _corsify_actual_response(make_response("User successfully added, signing in now", 200))
+    return _corsify_actual_response(make_response('{"status": "User successfully added, signing in now"}', 200))
 
 
 @app.route("/newjob", methods=['POST', 'OPTIONS'])
@@ -83,7 +83,7 @@ def receiveFile():
     flag = data.get('flag', '')
     exists = userDao.userExists(coursecode)
     if not exists:
-        return _corsify_actual_response(make_response("Course code not found", 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
     
     access = userDao.signIn(coursecode, password)
     if access == 1:
@@ -101,7 +101,7 @@ def receiveFile():
                     archive.save(os.path.join(path, archive.filename))
 
         if not files_found:
-            return _corsify_actual_response(make_response("No files found, please upload source code files.", 404))
+            return _corsify_actual_response(make_response('{"error": "No files found, please upload source code files."}', 404))
         
         #TODO: Archive
         
@@ -111,9 +111,8 @@ def receiveFile():
         reportDAO.addReport(jobname, coursecode)
         jobHandler.createJob.delay(files, jobname, coursecode, flag)
 
-        return _corsify_actual_response(make_response("Job successfully created and started, please wait for the job "
-                                                      "to complete.", 200))
-    return _corsify_actual_response(make_response("Incorrect password", 401))
+        return _corsify_actual_response(make_response('{"status": "Job successfully created and started, please wait for the job to complete."}', 200))
+    return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
 
 @app.route("/getalljobs", methods=['GET', 'OPTIONS'])
@@ -127,7 +126,7 @@ def getalljobs():
     # check if user exists
     exists = userDao.userExists(username)
     if not exists:
-        return _corsify_actual_response(make_response("Course code not found", 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
 
     # get password from object
     access = userDao.signIn(username, password)
@@ -135,7 +134,7 @@ def getalljobs():
         reportDAO.initReports()
         return _corsify_actual_response(make_response(reportDAO.getAllJobs(username), 200))
 
-    return _corsify_actual_response(make_response("Incorrect password", 401))
+    return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
 
 @app.route("/getreport", methods=['GET', 'OPTIONS'])
@@ -151,7 +150,7 @@ def getreport():
     # check if user exists
     exists = userDao.userExists(username)
     if not exists:
-        return _corsify_actual_response(make_response("Course code not found", 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
 
     # get password from object
     access = userDao.signIn(username, password)
@@ -161,8 +160,8 @@ def getreport():
             reporturl = reportDAO.getReport(jobname, username)
             return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '"}', 200))
         else:
-            return _corsify_actual_response(make_response("No report found", 404))
-    return _corsify_actual_response(make_response("Incorrect password", 401))
+            return _corsify_actual_response(make_response('{"error": "No report found"}', 404))
+    return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
 
 def _build_cors_prelight_response():
