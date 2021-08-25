@@ -46,6 +46,8 @@ class ReportDAO:
         return self.reports[index].checkStatus()
 
     def getReport(self, name, coursecode):
+        return "www.google.com"
+        # just a placeholder for the api this statement will be removed when we actually have reports to get
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             return -10
