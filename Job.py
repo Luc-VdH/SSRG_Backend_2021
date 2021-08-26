@@ -18,6 +18,7 @@ class Job:
 
         self.reportScraper = ReportScraper()
         self.urlOfRawReport = ''
+        self.status = 1
 
     # start the job, this is called and run in celery
     def start(self):
@@ -48,10 +49,11 @@ class Job:
         # save the url
         self.urlOfRawReport = url
         # check if the job has failed
-        if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
+        if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http://":
             # self.report.jobFailed()
             print(f'Job Failed: {self.urlOfRawReport}')
             self.urlOfRawReport = ''
+            self.status = -1
         # TODO Handle
         else:
             print('Received Moss Response\nURL set to ' + self.urlOfRawReport)
@@ -85,7 +87,7 @@ class Job:
             "id": "BackendSSRG1",
             "reportName": self.reportName,
             "coursecode": self.username,
-            "status": 1,
+            "status": self.status,
             "rawurl": self.urlOfRawReport
         }
         data = json.dumps(data)
