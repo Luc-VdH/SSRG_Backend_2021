@@ -47,9 +47,9 @@ class Job:
         url = "http" + (word.split("http")[-1])
         print(url)
         # save the url
-        self.urlOfRawReport = url.trim()
+        self.urlOfRawReport = url.strip()
         # check if the job has failed
-        if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http://":
+        if self.urlOfRawReport == '' or self.urlOfRawReport[0:7] != "http://":
             # self.report.jobFailed()
             print(f'Job Failed: {self.urlOfRawReport}')
             self.urlOfRawReport = ''
