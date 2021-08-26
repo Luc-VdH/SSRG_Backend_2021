@@ -44,7 +44,7 @@ class Job:
         #url = "http" + url
         #url = url[:-2]
         print(url)
-        self.urlOfRawReport = url
+        self.urlOfRawReport = url.trim()
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
             # self.report.jobFailed()
             print(f'Job Failed: {self.urlOfRawReport}')
