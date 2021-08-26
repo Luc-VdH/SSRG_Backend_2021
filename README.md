@@ -5,7 +5,7 @@
 	run the app.py script: python3 app.py
 	this will start up the server similar to npm start
 
-	open the browser and go to localhost:80 to view the text returned from the server
+	open the browser and go to localhost:8000 to view the text returned from the server
 
 ### To run moss script:
 * chmod ug+x moss
