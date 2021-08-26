@@ -6,8 +6,10 @@ import json
 from time import sleep
 
 
+# class for running the moss script in parallel
 class Job:
-    
+
+    # constructor
     def __init__(self, files, reportName, username, flag):
         self.files = " ".join(files)
         self.reportName = reportName
@@ -17,34 +19,35 @@ class Job:
         self.reportScraper = ReportScraper()
         self.urlOfRawReport = ''
 
-    # Job.reportDAO.addReport(reportName, username)
-    # self.report = Job.reportDAO.getReport(reportName, username)
-
+    # start the job, this is called and run in celery
     def start(self):
         print('Started Job: ' + self.reportName)
+        # make calls to helper functions
         self.uploadFilesToMoss()
         self.scrapeReport()
         self.updateReportDAO()
         self.emailJobComplete()
         print('Finished Job: ' + self.reportName)
 
+    # runs the moss script
     def uploadFilesToMoss(self):
         print('Files Uploading')
+        # build run command string
         cmd = f"./moss -l {self.flag} {self.files}"
-        # output = subprocess.getoutput(cmd)
+        # run the command
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+        # wait for it to finish
         p.wait()
+        # get the output from the script
         out, err = p.communicate()
         word = out.decode("utf-8")
         print(word)
-        url = "http"+(word.split("http")[-1])
-        #word = str(out)
-        #all = word.split("\"")[-2]
-        #url = all.split("http")[-1]
-        #url = "http" + url
-        #url = url[:-2]
+        # extract the url from the output
+        url = "http" + (word.split("http")[-1])
         print(url)
+        # save the url
         self.urlOfRawReport = url
+        # check if the job has failed
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:4] != "http":
             # self.report.jobFailed()
             print(f'Job Failed: {self.urlOfRawReport}')
@@ -53,28 +56,29 @@ class Job:
         else:
             print('Received Moss Response\nURL set to ' + self.urlOfRawReport)
 
+    # send email to user that the job has completed
     def emailJobComplete(self):
         # TODO
         print('Job Complete (email)')
 
+    # scrape the report from moss
     def scrapeReport(self):
-        # self.reportScraper.scrapeReport(self.urlOfRawReport,f"reports/{self.coursecode}/{self.reportName}/")
+        # TODO
         print("SCRAPE")
 
+    # send a request to app to update the report
     def updateReportDAO(self):
-        # self.report.addRawURL(self.urlOfRawReport)
-        # file = open("reports/" + self.username + "/" + self.reportName + "/reportObject.txt", "w")
-        # file.write("1\n" + self.urlOfRawReport + "\n" + "")
-        # file.close()
-        
+        # check if running on EC2 or locally to determine IP and Port
         user = subprocess.check_output("whoami", shell=True).decode("utf-8")
-        if (user.strip() == "ubuntu"):
-            host="172.31.24.225:8080"
+        if user.strip() == "ubuntu":
+            host = "172.31.24.225:8080"
         else:
             host = "0.0.0.0:8000"
-        
+
+        # build a request url
         url = f"http://{host}/updatereport"
         print(url)
+        # build the request
         req = request.Request(url, method="POST")
         req.add_header('Content-Type', 'application/json')
         data = {
@@ -86,8 +90,8 @@ class Job:
         }
         data = json.dumps(data)
         data = data.encode()
+        # send the request
         r = request.urlopen(req, data=data)
         content = r.read()
         print(content)
         print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
-    # TODO
