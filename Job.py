@@ -69,11 +69,11 @@ class Job:
         
         user = subprocess.check_output("whoami", shell=True).decode("utf-8")
         if (user.strip() == "ubuntu"):
-            host="172.31.24.225"
+            host="172.31.24.225:8080"
         else:
-            host = "0.0.0.0"
+            host = "0.0.0.0:8000"
         
-        url = f"http://{host}:8000/updatereport"
+        url = f"http://{host}/updatereport"
         print(url)
         req = request.Request(url, method="POST")
         req.add_header('Content-Type', 'application/json')
