@@ -2,3 +2,7 @@
 .DS_Store
 */DS_Store
 moss
+reports/
+__*
+usrs/
+job_src/
