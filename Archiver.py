@@ -1,11 +1,14 @@
 import os
 
 
+# class for extracting source from a vula archive TODO currently not functional
 class Archiver:
+    # constructor
     def __init__(self):
         self.files = []
         self.flags = []
 
+    # run the extraction and formatting
     def formatArchive(self, files, username, jobname, flags):
         print(flags)
         for file in files:
