@@ -1,6 +1,7 @@
 from User import User
 import os.path
 
+
 # class for managing user objects
 class UserDAO:
     __users = []
@@ -25,9 +26,14 @@ class UserDAO:
         else:
             return 0
 
-    # TODO delete user
-    def deleteUser(self):
-        pass
+    def deleteUser(self, coursecode, password):
+        index = self.getUserIndex(coursecode)
+        if self.signIn(coursecode, password):
+            os.system("rm usrs/" + coursecode + ".txt")
+            self.__users.pop(index)
+            return 1
+        else:
+            return 0
 
     # TODO update user info
     def updateUserInfo(self):

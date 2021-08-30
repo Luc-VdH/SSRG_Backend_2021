@@ -16,9 +16,9 @@ jobHandler = JobHandler()
 
 
 # main endpoint, not meant to be used
-@app.route("/")
-def main():
-    return "Route Request to Student Similarity Report Generator"
+@app.route("/<path:path>")
+def main(path=None):
+    return make_response('{"error": "route endpoint"}', 404)
 
 
 # login endpoint for existing users
@@ -71,6 +71,20 @@ def signup():
     userDao.addUser(username_in, password_in, moss_id)
     # respond that the user was successfully added
     return _corsify_actual_response(make_response('{"status": "User successfully added, signing in now"}', 200))
+
+
+@app.route("/deleteuser", methods=['GET', 'OPTIONS'])
+def deleteuser():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+    data = request.get_json()
+    coursecode = data.get('coursecode', '')
+    password = data.get('password', '')
+    status = userDao.deleteUser(coursecode, password)
+    if status == 1:
+        return _corsify_actual_response(make_response('{"status": "User successfully deleted"}', 200))
+    else:
+        return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
 
 
 # endpoint for submitting a job, receives files and submits job to moss
