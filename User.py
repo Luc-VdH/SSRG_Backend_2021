@@ -20,6 +20,16 @@ class User:
     def getCoursecode(self):
         return self.__username
 
+    # setters
+    def setPassword(self, password):
+        self.__password = password
+
+    def setCoursecode(self, coursecode):
+        self.__username = coursecode
+
+    def setMossid(self, mossid):
+        self.__mossid = mossid
+
     # write information to user text file for persistent storage
     def save(self):
         file = open("usrs/" + self.__username + ".txt", "w")

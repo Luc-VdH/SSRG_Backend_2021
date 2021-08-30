@@ -77,14 +77,41 @@ def signup():
 def deleteuser():
     if request.method == "OPTIONS":  # CORS preflight
         return _build_cors_prelight_response()
-    data = request.get_json()
-    coursecode = data.get('coursecode', '')
-    password = data.get('password', '')
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
     status = userDao.deleteUser(coursecode, password)
     if status == 1:
         return _corsify_actual_response(make_response('{"status": "User successfully deleted"}', 200))
     else:
         return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+
+
+@app.route("/updateuser", methods=['POST', 'OPTIONS'])
+def updateuser():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+
+    data = request.get_json()
+    newpassword = data.get('newpassword', '')
+    moss_id = data.get('mossid', '')
+
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            userDao.updateUserInfo(coursecode, newpassword, moss_id)
+            return _corsify_actual_response(make_response('{"status": "User info successfully updated"}', 200))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
 
 
 # endpoint for submitting a job, receives files and submits job to moss
@@ -242,6 +269,7 @@ def _build_cors_prelight_response():
     response.headers.add('Access-Control-Allow-Headers', "*")
     response.headers.add('Access-Control-Allow-Methods', "*")
     return response
+
 
 # helper method for adding cors headers to a response
 def _corsify_actual_response(response):

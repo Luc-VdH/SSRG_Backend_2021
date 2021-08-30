@@ -36,8 +36,15 @@ class UserDAO:
             return 0
 
     # TODO update user info
-    def updateUserInfo(self):
-        pass
+    def updateUserInfo(self, coursecode, password, mossid):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            self.__users[index].setPassword(password)
+            self.__users[index].setMossid(mossid)
+            self.__users[index].save()
+            return 1
+        else:
+            return 0
 
     # function for checking if a user exists
     def userExists(self, coursecode):
