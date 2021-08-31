@@ -28,6 +28,7 @@ class Report:
 
     # raw moss url getter
     def getRawReport(self):
+        print(self.status)
         if self.status == 1:
             return self.urlOfRawReport
         else:
