@@ -31,7 +31,7 @@ class Report:
         if self.status == Report.COMPLETE:
             return self.urlOfRawReport
         else:
-            return 'www.google.com'
+            return "incomplete"
 
     # scrapped report getter
     def getScrappedReport(self):

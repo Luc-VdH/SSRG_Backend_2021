@@ -62,7 +62,7 @@ class ReportDAO:
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             # return junk address if the report cant be found TODO account for failed/incomplete jobs
-            return "www.google.com"
+            return "no course"
         return self.reports[index].getRawReport()  # TODO: scraped
 
     # delete a report based on its name and coursecode
