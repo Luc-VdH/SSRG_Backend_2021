@@ -233,15 +233,12 @@ def getreport():
     if access == 1:
         # TODO check if the report exists / the job has completed
         reporturl = reportDAO.getReport(jobname, coursecode)
-        if reporturl != "no course" and reporturl != "incomplete":
-            # get the report from the DAO
-
-            # send response with the report
-            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '"}', 200))
-        elif reporturl != "incomplete":
+        if reporturl == "no course":
+            return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 404))
+        elif reporturl == "incomplete":
             return _corsify_actual_response(make_response('{"error": "Job is not complete or has failed"}', 401))
         else:
-            return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 404))
+            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '"}', 200))
     # send error response that the password is incomplete
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
