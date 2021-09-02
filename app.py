@@ -279,12 +279,13 @@ def _corsify_actual_response(response):
 
 # main code executed when the program is run
 if __name__ == "__main__":
-    context = ('ssl/server.crt', 'ssl/server.key')
+    # context = ('ssl/server.crt', 'ssl/server.key')
     # get user
     user = subprocess.check_output("whoami", shell=True).decode("utf-8")
     # set the port and IP based on whether the user is the EC2 instance or not
     print("Running on:", user)
     if (user.strip() == "ubuntu"):
-        app.run(debug=True, host="172.31.24.225", port=8080, ssl_context=context)
+        # app.run(debug=True, host="172.31.24.225", port=8080, ssl_context=context)
+        app.run(debug=True, host="172.31.24.225", port=8080)
     else:
-        app.run(debug=True, host="0.0.0.0", port=8000, ssl_context=context)
+        app.run(debug=True, host="0.0.0.0", port=8000)
