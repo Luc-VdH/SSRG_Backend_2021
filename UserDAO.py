@@ -26,6 +26,33 @@ class UserDAO:
         else:
             return 0
 
+    def getUserEmail(self, coursecode):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            return self.__users[index].getEmails()
+        else:
+            return "not found"
+
+    def addUserEmails(self, coursecode, emails):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            self.__users[index].clearEmails()
+            arr = emails[1:-1:]
+            eArr = arr.split(", ")
+            for e in eArr:
+                self.__users[index].addEmail(e[1:-1])
+            self.__users[index].save()
+            return "success"
+        else:
+            return "not found"
+
+    def getUserMossid(self, coursecode):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            return self.__users[index].getMossid()
+        else:
+            return "not found"
+
     def deleteUser(self, coursecode, password):
         index = self.getUserIndex(coursecode)
         if self.signIn(coursecode, password):
@@ -59,9 +86,14 @@ class UserDAO:
                 # read the data from the file
                 password = file.readline().strip()
                 mossid = file.readline().strip()
-                file.close()
                 # build a new user object using that data
                 user = User(coursecode, password, mossid)
+                e = file.readline().strip()
+                emails = e.split("#")
+                for i in emails:
+                    user.addEmail(i)
+
+                file.close()
                 # add the object the list
                 self.__users.append(user)
         # return true if the user exists

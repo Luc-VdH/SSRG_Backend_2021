@@ -114,6 +114,76 @@ def updateuser():
         return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
 
 
+@app.route("/getusersettings", methods=['GET', 'OPTIONS'])
+def getsettings():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            mossid = userDao.getUserMossid(coursecode)
+            if mossid != "not found":
+                return _corsify_actual_response(make_response('{"mossid": "' + mossid + '"}', 200))
+            else:
+                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/getuseremails", methods=['GET', 'OPTIONS'])
+def getemails():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            emails = userDao.getUserEmail(coursecode)
+            if emails != "not found":
+                return _corsify_actual_response(make_response('{"emails": "' + str(emails) + '"}', 200))
+            else:
+                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/setuseremails", methods=['POST', 'OPTIONS'])
+def setemails():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    data = json.loads(request.form.get('data'))
+
+    emails = data.get('emails', '')
+
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            userDao.addUserEmails(coursecode, emails)
+            return _corsify_actual_response(make_response('{"status": "Emails successfully added"}', 200))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
 # endpoint for submitting a job, receives files and submits job to moss
 @app.route("/newjob", methods=['POST', 'OPTIONS'])
 def receiveFile():
