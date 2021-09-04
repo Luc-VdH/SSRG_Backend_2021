@@ -150,8 +150,11 @@ def getemails():
     if userDao.userExists(coursecode):
         if userDao.signIn(coursecode, password):
             emails = userDao.getUserEmail(coursecode)
+            send = "No emails"
+            if len(emails) > 0:
+                send = str(emails)
             if emails != "not found":
-                return _corsify_actual_response(make_response('{"emails": "' + str(emails) + '"}', 200))
+                return _corsify_actual_response(make_response('{"emails": "' + send + '"}', 200))
             else:
                 return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
         else:
