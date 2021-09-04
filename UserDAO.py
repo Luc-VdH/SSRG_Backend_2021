@@ -96,7 +96,8 @@ class UserDAO:
                 e = file.readline().strip()
                 emails = e.split("#")
                 for i in emails:
-                    user.addEmail(i)
+                    if i != '':
+                        user.addEmail(i)
 
                 file.close()
                 # add the object the list
