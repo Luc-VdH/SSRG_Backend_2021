@@ -155,7 +155,7 @@ def getemails():
             if len(emails) > 0:
                 send = str(json.dumps(emails))
             if emails != "not found":
-                return _corsify_actual_response(make_response('{"emails": "' + send + '"}', 200))
+                return _corsify_actual_response(make_response('{"emails": ' + send + '}', 200))
             else:
                 return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
         else:
