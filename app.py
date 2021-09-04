@@ -151,7 +151,8 @@ def getemails():
         if userDao.signIn(coursecode, password):
             emails = userDao.getUserEmail(coursecode)
             send = "No emails"
-            if len(emails) > 0:
+            #CAREFUL this is bad code and may break a thing
+            if str(emails) != "[\'\']":
                 send = str(emails)
             if emails != "not found":
                 return _corsify_actual_response(make_response('{"emails": "' + send + '"}', 200))
