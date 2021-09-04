@@ -170,8 +170,7 @@ def setemails():
     # extract the coursecode and password from the header
     coursecode = header.get('coursecode', '')
     password = header.get('password', '')
-    data = json.loads(request.form.get('data'))
-
+    data = request.get_json()
     emails = data.get('emails', '')
 
     if userDao.userExists(coursecode):
