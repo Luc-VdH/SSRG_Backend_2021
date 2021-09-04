@@ -153,7 +153,7 @@ def getemails():
             send = "No emails"
             #CAREFUL this is bad code and may break a thing
             if len(emails) > 0:
-                send = str(emails)
+                send = str(json.dumps(emails))
             if emails != "not found":
                 return _corsify_actual_response(make_response('{"emails": "' + send + '"}', 200))
             else:
