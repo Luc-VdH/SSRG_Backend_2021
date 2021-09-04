@@ -163,8 +163,8 @@ def getemails():
         return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
 
 
-@app.route("/setuseremails", methods=['POST', 'OPTIONS'])
-def setemails():
+@app.route("/addemail", methods=['POST', 'OPTIONS'])
+def addemail():
     if request.method == "OPTIONS":  # CORS preflight
         return _build_cors_prelight_response()
 
@@ -174,11 +174,34 @@ def setemails():
     coursecode = header.get('coursecode', '')
     password = header.get('password', '')
     data = request.get_json()
-    emails = data.get('emails', '')
+    email = data.get('email', '')
 
     if userDao.userExists(coursecode):
         if userDao.signIn(coursecode, password):
-            userDao.addUserEmails(coursecode, emails)
+            userDao.addUserEmail(coursecode, email)
+            return _corsify_actual_response(make_response('{"status": "Emails successfully added"}', 200))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/removeemail", methods=['POST', 'OPTIONS'])
+def removeemail():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    data = request.get_json()
+    email = data.get('email', '')
+
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            userDao.removeUserEmail(coursecode, email)
             return _corsify_actual_response(make_response('{"status": "Emails successfully added"}', 200))
         else:
             return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))

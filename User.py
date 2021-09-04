@@ -38,6 +38,9 @@ class User:
     def addEmail(self, email):
         self.__email.append(email)
 
+    def removeEmail(self, email):
+        self.__email.remove(email)
+
     def clearEmails(self):
         self.__email = []
     # write information to user text file for persistent storage

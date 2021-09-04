@@ -33,14 +33,19 @@ class UserDAO:
         else:
             return "not found"
 
-    def addUserEmails(self, coursecode, emails):
+    def addUserEmail(self, coursecode, email):
         index = self.getUserIndex(coursecode)
         if index != -1:
-            self.__users[index].clearEmails()
-            arr = emails[1:-1:]
-            eArr = arr.split(", ")
-            for e in eArr:
-                self.__users[index].addEmail(e[1:-1])
+            self.__users[index].addEmail(email)
+            self.__users[index].save()
+            return "success"
+        else:
+            return "not found"
+
+    def removeUserEmail(self, coursecode, email):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            self.__users[index].removeEmail(email)
             self.__users[index].save()
             return "success"
         else:
