@@ -334,7 +334,39 @@ def getreport():
         elif reporturl == "incomplete":
             return _corsify_actual_response(make_response('{"error": "Job is not complete or has failed"}', 401))
         else:
-            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '"}', 200))
+            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '", "matches": [{"files": ['
+                                                                                       '"test1.java", "test2.java"], '
+                                                                                       '"percent": "54%", "lines": [['
+                                                                                       '"public static void main('
+                                                                                       'String[] args) {reverse({1,2,'
+                                                                                       '3,4,5,6}, 6);}/* function '
+                                                                                       'that reverses array and '
+                                                                                       'stores itin another '
+                                                                                       'array/static void reverse(int '
+                                                                                       'a[], int n)","public static '
+                                                                                       'void main(String [] args){'
+                                                                                       'reverse({1,2,3,4,5,6}, '
+                                                                                       '6);}/function swaps the '
+                                                                                       'array\'s first element with '
+                                                                                       'last element,second element '
+                                                                                       'with last second element and '
+                                                                                       'so on*/static void reverse('
+                                                                                       'int a[], int n)"],'
+                                                                                       '["public static void main('
+                                                                                       'String[] args) {reverse({1,2,'
+                                                                                       '3,4,5,6}, 6);}/* function '
+                                                                                       'that reverses array and '
+                                                                                       'stores itin another '
+                                                                                       'array/static void reverse(int '
+                                                                                       'a[], int n)","public static '
+                                                                                       'void main(String [] args){'
+                                                                                       'reverse({1,2,3,4,5,6}, '
+                                                                                       '6);}/function swaps the '
+                                                                                       'array\'s first element with '
+                                                                                       'last element,second element '
+                                                                                       'with last second element and '
+                                                                                       'so on*/static void reverse('
+                                                                                       'int a[], int n)"]]}]}', 200))
     # send error response that the password is incomplete
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
