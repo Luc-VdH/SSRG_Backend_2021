@@ -7,13 +7,13 @@ from flask import Flask, request, jsonify, make_response
 from JobHandler import JobHandler
 from UserDAO import UserDAO
 from ReportDAO import ReportDAO
+from Email import Email
 
 app = Flask(__name__)
 
 reportDAO = ReportDAO()
 userDao = UserDAO()
 jobHandler = JobHandler()
-
 
 # main endpoint, not meant to be used
 @app.route("/<path:path>")
@@ -356,6 +356,27 @@ def updatereport():
     # update the report
     reportDAO.updateReport(reportName, coursecode, status, rawurl)
     return 'Updated'
+
+# endpoint for sending emails when the job is complete
+@app.route("/sendemails", methods=['POST'])
+def sendemails():
+    # get data from request body
+    data = request.get_json()
+    # check if the request is coming from celery
+    if data.get('id', '') != "BackendSSRG1":
+        return 'Invalid ID'
+
+    # get the new report information from the data
+    reportName = data.get('reportname', '')
+    coursecode = data.get('coursecode', '')
+    
+    emails = userDao.getUserEmail(coursecode)
+    
+    #email = Email(['cscmailaddress+user1@gmail.com', 'cscmailaddress+user2@gmail.com'], reportName)
+    email = Email(emails, reportName)
+    email.send()
+    # update the report
+    return 'Sent'
 
 
 # helper function for building a cors preflight response
