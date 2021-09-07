@@ -328,45 +328,13 @@ def getreport():
     access = userDao.signIn(coursecode, password)
     if access == 1:
         # TODO check if the report exists / the job has completed
-        reporturl = reportDAO.getReport(jobname, coursecode)
+        reporturl, data = reportDAO.getReport(jobname, coursecode)
         if reporturl == "no course":
             return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 404))
         elif reporturl == "incomplete":
             return _corsify_actual_response(make_response('{"error": "Job is not complete or has failed"}', 401))
         else:
-            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '", "matches": [{"files": ['
-                                                                                       '"test1.java", "test2.java"], '
-                                                                                       '"percent": "54%", "lines": [['
-                                                                                       '"public static void main('
-                                                                                       'String[] args) {reverse({1,2,'
-                                                                                       '3,4,5,6}, 6);}/* function '
-                                                                                       'that reverses array and '
-                                                                                       'stores itin another '
-                                                                                       'array/static void reverse(int '
-                                                                                       'a[], int n)","public static '
-                                                                                       'void main(String [] args){'
-                                                                                       'reverse({1,2,3,4,5,6}, '
-                                                                                       '6);}/function swaps the '
-                                                                                       'array\'s first element with '
-                                                                                       'last element,second element '
-                                                                                       'with last second element and '
-                                                                                       'so on*/static void reverse('
-                                                                                       'int a[], int n)"],'
-                                                                                       '["public static void main('
-                                                                                       'String[] args) {reverse({1,2,'
-                                                                                       '3,4,5,6}, 6);}/* function '
-                                                                                       'that reverses array and '
-                                                                                       'stores itin another '
-                                                                                       'array/static void reverse(int '
-                                                                                       'a[], int n)","public static '
-                                                                                       'void main(String [] args){'
-                                                                                       'reverse({1,2,3,4,5,6}, '
-                                                                                       '6);}/function swaps the '
-                                                                                       'array\'s first element with '
-                                                                                       'last element,second element '
-                                                                                       'with last second element and '
-                                                                                       'so on*/static void reverse('
-                                                                                       'int a[], int n)"]]}]}', 200))
+            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '", ' + data + '}' , 200))
     # send error response that the password is incomplete
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
@@ -385,8 +353,9 @@ def updatereport():
     rawurl = data.get('rawurl', '')
     coursecode = data.get('coursecode', '')
     status = data.get('status', '')
+    scrapedData = data.get('scraped', '')
     # update the report
-    reportDAO.updateReport(reportName, coursecode, status, rawurl)
+    reportDAO.updateReport(reportName, coursecode, status, rawurl, scrapedData)
     return 'Updated'
 
 # endpoint for sending emails when the job is complete

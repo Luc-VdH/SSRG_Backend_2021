@@ -15,7 +15,7 @@ class Match:
         out += '"percent": "' + self.__percent + '", "lines": ['
         for line in self.__lines:
             out += '["'
-            out += line[0].replace('\n','\\n') + '", "' + line[1].replace('\n','\\n')
+            out += line[0].replace('\n', '\\n') + '", "' + line[1].replace('\n', '\\n')
             out += '"], '
         out = out[:-2]
         out += ']}'
