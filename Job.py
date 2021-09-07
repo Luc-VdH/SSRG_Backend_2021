@@ -18,6 +18,7 @@ class Job:
 
         self.reportScraper = ReportScraper()
         self.urlOfRawReport = ''
+        self.scrapedData = ''
         self.status = 1
 
     # start the job, this is called and run in celery
@@ -60,7 +61,9 @@ class Job:
 
     # scrape the report from moss
     def scrapeReport(self):
-        # TODO
+        rs = ReportScraper(self.urlOfRawReport)
+        rs.scrapeReport()
+        self.scrapedData = rs.toString()
         print("SCRAPE")
 
     # send a request to app to update the report
@@ -83,7 +86,8 @@ class Job:
             "reportName": self.reportName,
             "coursecode": self.username,
             "status": self.status,
-            "rawurl": self.urlOfRawReport
+            "rawurl": self.urlOfRawReport,
+            "scraped": self.scrapedData
         }
         data = json.dumps(data)
         data = data.encode()

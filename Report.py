@@ -9,12 +9,12 @@ class Report:
     FAILED = -1
 
     # constructor
-    def __init__(self, name, coursecode, status=0, rawURL='', scrapedURL=''):
+    def __init__(self, name, coursecode, status=0, rawURL='', scraped=''):
         self.reportName = name
         self.coursecode = coursecode
         self.status = status
         self.urlOfRawReport = rawURL
-        self.urlOfScrappedReport = scrapedURL
+        self.scrapedData = scraped
         # write information to file for persistent storage
         self.writeToFile()
 
@@ -36,7 +36,7 @@ class Report:
     # scrapped report getter
     def getScrappedReport(self):
         if self.status == Report.COMPLETE:
-            return self.urlOfScrappedReport
+            return self.scrapedData
         else:
             return ''
 
@@ -50,8 +50,9 @@ class Report:
         self.writeToFile()
 
     # setter for raw url, updates file
-    def addRawURL(self, url):
+    def addJobCompleteInfo(self, url, data):
         self.urlOfRawReport = url
+        self.scrapedData = data
         self.status = Report.COMPLETE
         self.writeToFile()
 
@@ -65,7 +66,7 @@ class Report:
             os.makedirs(path)
         # write fields to file names reportObject.txt in the directory
         f = open(f"reports/{self.coursecode}/{self.reportName}/reportObject.txt", "w")
-        f.write(f"{self.status}\n{self.urlOfRawReport}\n{self.urlOfScrappedReport}")
+        f.write(f"{self.status}\n{self.urlOfRawReport}\n{self.scrapedData}")
         f.close()
 
     # getter for all job information
@@ -89,4 +90,4 @@ class Report:
         sc = file.readline().strip()
         self.status = int(s)
         self.urlOfRawReport = r
-        self.urlOfScrappedReport = sc
+        self.scrapedData = sc
