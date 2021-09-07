@@ -2,14 +2,17 @@ import urllib.request
 from selenium import webdriver
 from bs4 import BeautifulSoup
 from Match import Match
-
+from webdriver_manager.chrome import ChromeDriverManager
 
 # class for scraping moss for report information / html files
 class ReportScraper:
     def __init__(self, url):
         self.urlOfRawReport = url
         print("setting driver...")
-        self.__driver = webdriver.Firefox()
+        opts = webdriver.ChromeOptions()
+        opts.headless =True
+        #self.__driver = webdriver.Chrome(ChromeDriverManager().install())
+        self.__driver = webdriver.Chrome("/usr/lib/chromium-browser/chromedriver", options=opts)#self.__driver = webdriver.Firefox()
         self.__matches = []
 
     def scrapeReport(self):
