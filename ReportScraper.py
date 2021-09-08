@@ -75,7 +75,7 @@ class ReportScraper:
         soup = BeautifulSoup(content, features="html.parser")
         names = []
         for a in soup.findAll('a'):
-            # TODO get line numbers for each block 
+            # TODO get line numbers for each block
             name = a['name']
             if name not in names:
                 names.append(name)
