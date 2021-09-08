@@ -101,7 +101,7 @@ class Job:
         # check if running on EC2 or locally to determine IP and Port
         user = subprocess.check_output("whoami", shell=True).decode("utf-8")
         if user.strip() == "ubuntu":
-            host = "13.244.243.28:8080"
+            host = "172.31.24.225:8080"
         else:
             host = "0.0.0.0:8000"
 
