@@ -16,7 +16,6 @@ class Job:
         self.username = username
         self.flag = flag
 
-        self.reportScraper = ReportScraper()
         self.urlOfRawReport = ''
         self.scrapedData = ''
         self.status = 1
