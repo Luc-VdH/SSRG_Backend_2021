@@ -36,7 +36,7 @@ class Job:
     def uploadFilesToMoss(self):
         print('Files Uploading: '+self.files)
         # build run command string
-        cmd = f"./moss -l {self.flag} -d {self.files}/*/*.{self.flag}"
+        cmd = f"./moss -l {self.flag} -d {self.files}/*/*"
         # run the command
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         # wait for it to finish
