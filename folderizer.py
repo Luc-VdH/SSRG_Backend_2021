@@ -49,10 +49,12 @@ for item in os.listdir(rootdir): # Get a list of all items in the root directory
                 file_path = os.path.join(root, filename)
                 if not os.path.splitext(file_path)[1] == '.txt': # Assumes that the only files submitted are archives or
                     if verbose: print("Extracting file %s to %s" % (file_path, dir_path))
-                    try:
-                        Archive(file_path).extractall(dir_path)
-                    except Exception as e:
-                        print("Unzip Failed. Reason: " + str(e))
+                    if not ("DS_Store" in file_path or ".git" in file_path):
+                        try:
+                            Archive(file_path).extractall(dir_path)
+                        except Exception as e:
+                            if verbose:
+                                print("Unzip Failed. Reason: " + str(e))
 
 
 print('=================================Pulling out code=========================================================')

@@ -230,7 +230,20 @@ def receiveFile():
     # get job name and moss flags from the json/body
     jobname = data.get('jobname', '')
     flag = data.get('flag', '')
-
+    email = data.get('email', '')
+    
+    path = os.path.join("job_src", coursecode, jobname)
+    
+    batch = request.files.getlist('batch')#TODO: get Batch
+    print(batch)
+    if batch != []:
+        batch = batch[0]
+        if os.path.exists(os.path.join(path, batch.filename)):
+            os.remove(os.path.join(path, batch.filename))
+        batch.save(os.path.join(path, batch.filename))   
+        batch = batch.filename
+    else:
+        batch = ""
     # check if the user exists
     exists = userDao.userExists(coursecode)
     if not exists:
@@ -241,36 +254,36 @@ def receiveFile():
     access = userDao.signIn(coursecode, password)
     if access == 1:
         # checking if user file directory exists
-        path = os.path.join("job_src", coursecode, jobname)
         # make the directory if it does not exist
         if not os.path.exists(path):
             print('Making directory: ' + path)
             os.makedirs(path)
-
+        files = ''
         # save files to path
         for archive in request.files.getlist('file[]'):
             if archive.filename != '':
                 files_found = True
+                files = files + archive.filename + " "
                 if not os.path.exists(os.path.join(path, archive.filename)):
                     archive.save(os.path.join(path, archive.filename))
-
+        
+        files.rstrip()
+        files = files.split()
+        print(files)
+        
         # check that files were received
-        if not files_found:
+        if not files_found and batch==[]:
             # respond with error if none were received
             return _corsify_actual_response(
                 make_response('{"error": "No files found, please upload source code files."}', 404))
 
         # TODO: Archive
 
-        # make an array of file paths
-        files = [os.path.join(path, x) for x in os.listdir(path)]
-        print(" ".join(files))
-
         # instruct reportDAO to make a new report object with status in progress
         reportDAO.addReport(jobname, coursecode)
         # instruct the job handler to start the job
-        jobHandler.createJob.delay(files, jobname, coursecode, flag)
-
+        jobHandler.createJob.delay(files, jobname, coursecode, flag, batch, False) #TODO: Get SendEmail
+        
         # respond that the job was successfully started
         return _corsify_actual_response(
             make_response('{"status": "Job successfully created and started, please wait for the job to complete."}',

@@ -1,5 +1,5 @@
 import os
-
+import shutil
 
 # class for extracting source from a vula archive TODO currently not functional
 class Archiver:
@@ -9,22 +9,39 @@ class Archiver:
         self.flags = []
 
     # run the extraction and formatting
-    def formatArchive(self, files, username, jobname, flags):
-        print(flags)
-        for file in files:
-            filename, file_extension = os.path.splitext(file)
-            if file_extension == ".zip":
-                os.system("unzip " + file.split("/")[-1])
-                # for f in os.listdir(filename): # go through files in archive
-                #     studentfolder = os.path.join(filename, f)
-                #     if not os.path.isfile(studentfolder):
-                #         for fi in os.listdir(studentfolder): # go though files in subfolder
-                #             studentfile = os.path.join(studentfolder, fi)
-                #             sfilename, sfile_extension = os.path.splitext(studentfile)
-                #             if sfile_extension == ".zip":
-                #                 os.system("unzip" + file)
-                #             elif sfile_extension == ".gz":
-                #                 pass
-                os.system("cp -r " + filename + "/*." + flags + " .")
-
-        return True
+    def formatArchive(self, files, coursecode, jobname, batch):
+        print(files)
+        
+        path = os.path.join("job_src", coursecode, jobname)
+        pathdir = os.path.join("job_src", coursecode, jobname, "archive")
+        
+        if not os.path.exists(pathdir):
+            os.makedirs(pathdir)
+        else:
+            if os.listdir(pathdir) != []:
+                os.system(f"rm -r {pathdir}/*")  
+              
+        if batch != '':
+            os.system(f'unzip "{path}/{batch}" -d "{path}/temp" >/dev/null')
+            #for f in os.listdir(os.path.join(path,"temp",os.path.splitext(batch)[0])):
+            #    shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0], f), os.path.join(pathdir, f))
+            shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0]), os.path.join(pathdir,os.path.splitext(batch)[0]))
+            os.remove(f"{path}/{batch}")
+            shutil.rmtree(f"{path}/temp")
+            os.system(f'python3 folderizer.py {pathdir}/BatchSubmissionExample {pathdir} >/dev/null')
+            shutil.rmtree(os.path.join(pathdir,"BatchSubmissionExample"))
+            
+        for f in files:
+            if f == '' or "archive" == f:
+                continue
+            print("File: " + f)
+            shutil.move(os.path.join(path,f), os.path.join(pathdir,f))
+            #os.makedirs(os.path.join(pathdir,os.path.splitext(f)[0]))
+            os.system(f'unzip "{pathdir}/{f}" -d "{pathdir}" >/dev/null')
+            os.remove(f"{pathdir}/{f}")
+        
+        if os.path.exists(pathdir + "/.DS_Store"):
+              os.remove(pathdir + "/.DS_Store")
+        
+        print ("Archived Files: "+" ".join(os.listdir(pathdir)))
+        return pathdir

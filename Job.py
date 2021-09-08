@@ -10,11 +10,12 @@ from time import sleep
 class Job:
 
     # constructor
-    def __init__(self, files, reportName, username, flag):
-        self.files = " ".join(files)
+    def __init__(self, files, reportName, username, flag, email):
+        self.files = files
         self.reportName = reportName
         self.username = username
         self.flag = flag
+        self.email = email
 
         self.urlOfRawReport = ''
         self.scrapedData = ''
@@ -27,14 +28,15 @@ class Job:
         self.uploadFilesToMoss()
         self.scrapeReport()
         self.updateReportDAO()
-        self.emailJobComplete()
+        if self.email:
+            self.emailJobComplete()
         print('Finished Job: ' + self.reportName)
 
     # runs the moss script
     def uploadFilesToMoss(self):
-        print('Files Uploading')
+        print('Files Uploading: '+self.files)
         # build run command string
-        cmd = f"./moss -l {self.flag} {self.files}"
+        cmd = f"./moss -l {self.flag} -d {self.files}/*/*.{self.flag}"
         # run the command
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         # wait for it to finish
