@@ -404,6 +404,6 @@ if __name__ == "__main__":
     print("Running on:", user)
     if (user.strip() == "ubuntu"):
         # app.run(debug=True, host="172.31.24.225", port=8080, ssl_context=context)
-        app.run(debug=True, host="13.244.243.28", port=8080)
+        app.run(debug=True, host="172.31.24.225", port=8080)
     else:
         app.run(debug=True, host="0.0.0.0", port=8000)
