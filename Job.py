@@ -16,8 +16,8 @@ class Job:
         self.username = username
         self.flag = flag
 
-        self.reportScraper = ReportScraper()
         self.urlOfRawReport = ''
+        self.scrapedData = ''
         self.status = 1
 
     # start the job, this is called and run in celery
@@ -58,14 +58,11 @@ class Job:
         else:
             print('Received Moss Response\nURL set to ' + self.urlOfRawReport)
 
-    # send email to user that the job has completed
-    def emailJobComplete(self):
-        # TODO
-        print('Job Complete (email)')
-
     # scrape the report from moss
     def scrapeReport(self):
-        # TODO
+        rs = ReportScraper(self.urlOfRawReport)
+        rs.scrapeReport()
+        self.scrapedData = rs.toString()
         print("SCRAPE")
 
     # send a request to app to update the report
@@ -88,7 +85,8 @@ class Job:
             "reportName": self.reportName,
             "coursecode": self.username,
             "status": self.status,
-            "rawurl": self.urlOfRawReport
+            "rawurl": self.urlOfRawReport,
+            "scraped": self.scrapedData
         }
         data = json.dumps(data)
         data = data.encode()
@@ -97,3 +95,32 @@ class Job:
         content = r.read()
         print(content)
         print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
+        
+    # send a request to app to send the conformation email
+    def emailJobComplete(self):
+        # check if running on EC2 or locally to determine IP and Port
+        user = subprocess.check_output("whoami", shell=True).decode("utf-8")
+        if user.strip() == "ubuntu":
+            host = "172.31.24.225:8080"
+        else:
+            host = "0.0.0.0:8000"
+
+        # build a request url
+        url = f"http://{host}/sendemails"
+        
+        # build the request
+        req = request.Request(url, method="POST")
+        req.add_header('Content-Type', 'application/json')
+        data = {
+            "id": "BackendSSRG1",
+            "reportName": self.reportName,
+            "coursecode": self.username,
+            "status": self.status,
+        }
+        data = json.dumps(data)
+        data = data.encode()
+        # send the request
+        r = request.urlopen(req, data=data)
+        content = r.read()
+        print(content)
+        print(f'Sending Emails.')

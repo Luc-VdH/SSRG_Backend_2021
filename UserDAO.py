@@ -1,6 +1,7 @@
 from User import User
 import os.path
 
+
 # class for managing user objects
 class UserDAO:
     __users = []
@@ -25,13 +26,57 @@ class UserDAO:
         else:
             return 0
 
-    # TODO delete user
-    def deleteUser(self):
-        pass
+    def getUserEmail(self, coursecode):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            return self.__users[index].getEmails()
+        else:
+            return "not found"
+
+    def addUserEmail(self, coursecode, email):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            self.__users[index].addEmail(email)
+            self.__users[index].save()
+            return "success"
+        else:
+            return "not found"
+
+    def removeUserEmail(self, coursecode, email):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            self.__users[index].removeEmail(email)
+            self.__users[index].save()
+            return "success"
+        else:
+            return "not found"
+
+    def getUserMossid(self, coursecode):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            return self.__users[index].getMossid()
+        else:
+            return "not found"
+
+    def deleteUser(self, coursecode, password):
+        index = self.getUserIndex(coursecode)
+        if self.signIn(coursecode, password):
+            os.system("rm usrs/" + coursecode + ".txt")
+            self.__users.pop(index)
+            return 1
+        else:
+            return 0
 
     # TODO update user info
-    def updateUserInfo(self):
-        pass
+    def updateUserInfo(self, coursecode, password, mossid):
+        index = self.getUserIndex(coursecode)
+        if index != -1:
+            self.__users[index].setPassword(password)
+            self.__users[index].setMossid(mossid)
+            self.__users[index].save()
+            return 1
+        else:
+            return 0
 
     # function for checking if a user exists
     def userExists(self, coursecode):
@@ -46,9 +91,15 @@ class UserDAO:
                 # read the data from the file
                 password = file.readline().strip()
                 mossid = file.readline().strip()
-                file.close()
                 # build a new user object using that data
                 user = User(coursecode, password, mossid)
+                e = file.readline().strip()
+                emails = e.split("#")
+                for i in emails:
+                    if i != '':
+                        user.addEmail(i)
+
+                file.close()
                 # add the object the list
                 self.__users.append(user)
         # return true if the user exists

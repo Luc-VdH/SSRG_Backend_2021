@@ -62,8 +62,8 @@ class ReportDAO:
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             # return junk address if the report cant be found TODO account for failed/incomplete jobs
-            return "www.google.com"
-        return self.reports[index].getRawReport()  # TODO: scraped
+            return "no course"
+        return self.reports[index].getRawReport(), self.reports[index].getScrappedReport()  # TODO: scraped
 
     # delete a report based on its name and coursecode
     def deleteReport(self, name, coursecode):
@@ -82,11 +82,11 @@ class ReportDAO:
         return "[" + jobs[:len(jobs) - 2] + "]"
 
     # update a report with the information provided
-    def updateReport(self, name, coursecode, status, url):
+    def updateReport(self, name, coursecode, status, url, data):
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             return False
         if status == -1:
             self.reports[index].jobFailed()
         else:
-            self.reports[index].addRawURL(url)
+            self.reports[index].addJobCompleteInfo(url, data)

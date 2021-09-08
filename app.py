@@ -7,6 +7,7 @@ from flask import Flask, request, jsonify, make_response
 from JobHandler import JobHandler
 from UserDAO import UserDAO
 from ReportDAO import ReportDAO
+from Email import Email
 
 app = Flask(__name__)
 
@@ -14,11 +15,10 @@ reportDAO = ReportDAO()
 userDao = UserDAO()
 jobHandler = JobHandler()
 
-
 # main endpoint, not meant to be used
-@app.route("/")
-def main():
-    return "Route Request to Student Similarity Report Generator"
+@app.route("/<path:path>")
+def main(path=None):
+    return make_response('{"error": "route endpoint"}', 404)
 
 
 # login endpoint for existing users
@@ -71,6 +71,143 @@ def signup():
     userDao.addUser(username_in, password_in, moss_id)
     # respond that the user was successfully added
     return _corsify_actual_response(make_response('{"status": "User successfully added, signing in now"}', 200))
+
+
+@app.route("/deleteuser", methods=['GET', 'OPTIONS'])
+def deleteuser():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    status = userDao.deleteUser(coursecode, password)
+    if status == 1:
+        return _corsify_actual_response(make_response('{"status": "User successfully deleted"}', 200))
+    else:
+        return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+
+
+@app.route("/updateuser", methods=['POST', 'OPTIONS'])
+def updateuser():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+
+    data = request.get_json()
+    newpassword = data.get('newpassword', '')
+    moss_id = data.get('mossid', '')
+
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            userDao.updateUserInfo(coursecode, newpassword, moss_id)
+            return _corsify_actual_response(make_response('{"status": "User info successfully updated"}', 200))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/getusersettings", methods=['GET', 'OPTIONS'])
+def getsettings():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            mossid = userDao.getUserMossid(coursecode)
+            if mossid != "not found":
+                return _corsify_actual_response(make_response('{"mossid": "' + mossid + '"}', 200))
+            else:
+                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/getuseremails", methods=['GET', 'OPTIONS'])
+def getemails():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            emails = userDao.getUserEmail(coursecode)
+            send = "No emails"
+            #CAREFUL this is bad code and may break a thing
+            if len(emails) > 0:
+                send = str(json.dumps(emails))
+            if emails != "not found":
+                return _corsify_actual_response(make_response('{"emails": ' + send + '}', 200))
+            else:
+                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/addemail", methods=['POST', 'OPTIONS'])
+def addemail():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    data = request.get_json()
+    email = data.get('email', '')
+
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            userDao.addUserEmail(coursecode, email)
+            return _corsify_actual_response(make_response('{"status": "Emails successfully added"}', 200))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+
+
+@app.route("/removeemail", methods=['POST', 'OPTIONS'])
+def removeemail():
+    if request.method == "OPTIONS":  # CORS preflight
+        return _build_cors_prelight_response()
+
+    # get the header of the request
+    header = request.headers
+    # extract the coursecode and password from the header
+    coursecode = header.get('coursecode', '')
+    password = header.get('password', '')
+    data = request.get_json()
+    email = data.get('email', '')
+
+    if userDao.userExists(coursecode):
+        if userDao.signIn(coursecode, password):
+            userDao.removeUserEmail(coursecode, email)
+            return _corsify_actual_response(make_response('{"status": "Emails successfully added"}', 200))
+        else:
+            return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
+    else:
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
 
 
 # endpoint for submitting a job, receives files and submits job to moss
@@ -191,13 +328,13 @@ def getreport():
     access = userDao.signIn(coursecode, password)
     if access == 1:
         # TODO check if the report exists / the job has completed
-        if True:
-            # get the report from the DAO
-            reporturl = reportDAO.getReport(jobname, coursecode)
-            # send response with the report
-            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '"}', 200))
+        reporturl, data = reportDAO.getReport(jobname, coursecode)
+        if reporturl == "no course":
+            return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 404))
+        elif reporturl == "incomplete":
+            return _corsify_actual_response(make_response('{"error": "Job is not complete or has failed"}', 401))
         else:
-            return _corsify_actual_response(make_response('{"error": "No report found"}', 404))
+            return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '", ' + data + '}' , 200))
     # send error response that the password is incomplete
     return _corsify_actual_response(make_response('{"error": "Incorrect password"}', 401))
 
@@ -216,9 +353,31 @@ def updatereport():
     rawurl = data.get('rawurl', '')
     coursecode = data.get('coursecode', '')
     status = data.get('status', '')
+    scrapedData = data.get('scraped', '')
     # update the report
-    reportDAO.updateReport(reportName, coursecode, status, rawurl)
+    reportDAO.updateReport(reportName, coursecode, status, rawurl, scrapedData)
     return 'Updated'
+
+# endpoint for sending emails when the job is complete
+@app.route("/sendemails", methods=['POST'])
+def sendemails():
+    # get data from request body
+    data = request.get_json()
+    # check if the request is coming from celery
+    if data.get('id', '') != "BackendSSRG1":
+        return 'Invalid ID'
+
+    # get the new report information from the data
+    reportName = data.get('reportname', '')
+    coursecode = data.get('coursecode', '')
+    
+    emails = userDao.getUserEmail(coursecode)
+    
+    #email = Email(['cscmailaddress+user1@gmail.com', 'cscmailaddress+user2@gmail.com'], reportName)
+    email = Email(emails, reportName)
+    email.send()
+    # update the report
+    return 'Sent'
 
 
 # helper function for building a cors preflight response
@@ -229,6 +388,7 @@ def _build_cors_prelight_response():
     response.headers.add('Access-Control-Allow-Methods', "*")
     return response
 
+
 # helper method for adding cors headers to a response
 def _corsify_actual_response(response):
     response.headers.add("Access-Control-Allow-Origin", "*")
@@ -237,11 +397,13 @@ def _corsify_actual_response(response):
 
 # main code executed when the program is run
 if __name__ == "__main__":
+    # context = ('ssl/server.crt', 'ssl/server.key')
     # get user
     user = subprocess.check_output("whoami", shell=True).decode("utf-8")
     # set the port and IP based on whether the user is the EC2 instance or not
     print("Running on:", user)
     if (user.strip() == "ubuntu"):
+        # app.run(debug=True, host="172.31.24.225", port=8080, ssl_context=context)
         app.run(debug=True, host="172.31.24.225", port=8080)
     else:
         app.run(debug=True, host="0.0.0.0", port=8000)
