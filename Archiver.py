@@ -22,17 +22,18 @@ class Archiver:
                 os.system(f"rm -r {pathdir}/*")  
               
         if batch != '':
-            os.system(f'unzip "{path}/{batch}" -d "{path}/temp" >/dev/null')
+            os.system(f'unzip "{path}/{batch}" -d "{path}/temp" >/dev/null')#unzip to /temp
             #for f in os.listdir(os.path.join(path,"temp",os.path.splitext(batch)[0])):
             #    shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0], f), os.path.join(pathdir, f))
             batchname = os.path.splitext(batch)[0]
-            shutil.move(os.path.join(path,"temp",batchname), os.path.join(pathdir,batchname))
-            os.remove(f"{path}/{batch}")
-            shutil.rmtree(f"{path}/temp")
-            os.system(f'python3 folderizer.py {pathdir}/BatchSubmissionExample {pathdir}/test >/dev/null')
-            shutil.move(os.path.join(pathdir,"test",batchname), pathdir)
-            shutil.rmtree(os.path.join(pathdir,"BatchSubmissionExample"))
-            shutil.rmtree(os.path.join(pathdir,"test"))
+            shutil.move(os.path.join(path,"temp",batchname), os.path.join(pathdir,batchname))#move temp/batch to archive/batch
+            os.remove(f"{path}/{batch}")#remove zip
+            shutil.rmtree(f"{path}/temp") #remove temp folder
+            os.system(f'python3 folderizer.py {pathdir}/{batchname} {pathdir}/test >/dev/null')#folderise to archive/test
+            shutil.rmtree(os.path.join(pathdir,batchname)) #remove archive/batch
+            for f in os.listdir(os.path.join(pathdir,"test")): #move all from archive/test to arhcive
+                shutil.move(os.path.join(pathdir,"test",f),pathdir)
+            shutil.rmtree(os.path.join(pathdir,"test"))#remove test folder
             
         for f in files:
             if f == '' or "archive" == f:
