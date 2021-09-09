@@ -26,10 +26,10 @@ class Archiver:
             #for f in os.listdir(os.path.join(path,"temp",os.path.splitext(batch)[0])):
             #    shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0], f), os.path.join(pathdir, f))
             shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0]), os.path.join(pathdir,os.path.splitext(batch)[0]))
-            os.remove(f"{path}/{batch}")
-            shutil.rmtree(f"{path}/temp")
+            #os.remove(f"{path}/{batch}")
+            #shutil.rmtree(f"{path}/temp")
             os.system(f'python3 folderizer.py {pathdir}/BatchSubmissionExample {pathdir} >/dev/null')
-            shutil.rmtree(os.path.join(pathdir,"BatchSubmissionExample"))
+            #shutil.rmtree(os.path.join(pathdir,"BatchSubmissionExample"))
             
         for f in files:
             if f == '' or "archive" == f:
