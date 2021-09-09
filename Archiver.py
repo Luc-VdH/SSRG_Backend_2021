@@ -25,11 +25,14 @@ class Archiver:
             os.system(f'unzip "{path}/{batch}" -d "{path}/temp" >/dev/null')
             #for f in os.listdir(os.path.join(path,"temp",os.path.splitext(batch)[0])):
             #    shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0], f), os.path.join(pathdir, f))
-            shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0]), os.path.join(pathdir,os.path.splitext(batch)[0]))
+            batchname = os.path.splitext(batch)[0]
+            shutil.move(os.path.join(path,"temp",batchname), os.path.join(pathdir,batchname))
             os.remove(f"{path}/{batch}")
             shutil.rmtree(f"{path}/temp")
-            os.system(f'python3 folderizer.py {pathdir}/BatchSubmissionExample {pathdir} >/dev/null')
+            os.system(f'python3 folderizer.py {pathdir}/BatchSubmissionExample {pathdir}/test >/dev/null')
+            shutil.move(os.path.join(pathdir,"test",batchname), pathdir)
             shutil.rmtree(os.path.join(pathdir,"BatchSubmissionExample"))
+            shutil.rmtree(os.path.join(pathdir,"test"))
             
         for f in files:
             if f == '' or "archive" == f:
