@@ -236,14 +236,7 @@ def receiveFile():
     
     batch = request.files.getlist('batch')#TODO: get Batch
     print(batch)
-    if batch != []:
-        batch = batch[0]
-        if os.path.exists(os.path.join(path, batch.filename)):
-            os.remove(os.path.join(path, batch.filename))
-        batch.save(os.path.join(path, batch.filename))   
-        batch = batch.filename
-    else:
-        batch = ""
+    
     # check if the user exists
     exists = userDao.userExists(coursecode)
     if not exists:
@@ -258,6 +251,15 @@ def receiveFile():
         if not os.path.exists(path):
             print('Making directory: ' + path)
             os.makedirs(path)
+            
+        if batch != []:
+            batch = batch[0]
+            if os.path.exists(os.path.join(path, batch.filename)):
+                os.remove(os.path.join(path, batch.filename))
+            batch.save(os.path.join(path, batch.filename))   
+            batch = batch.filename
+        else:
+            batch = ""    
         files = ''
         # save files to path
         for archive in request.files.getlist('file[]'):
