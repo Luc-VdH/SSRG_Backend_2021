@@ -9,12 +9,13 @@ class Report:
     FAILED = -1
 
     # constructor
-    def __init__(self, name, coursecode, status=0, rawURL='', scraped=''):
+    def __init__(self, name, coursecode, date, status=0, rawURL='', scraped=''):
         self.reportName = name
         self.coursecode = coursecode
         self.status = status
         self.urlOfRawReport = rawURL
         self.scrapedData = scraped
+        self.date = date
         # write information to file for persistent storage
         self.writeToFile()
 
@@ -66,17 +67,17 @@ class Report:
             os.makedirs(path)
         # write fields to file names reportObject.txt in the directory
         f = open(f"reports/{self.coursecode}/{self.reportName}/reportObject.txt", "w")
-        f.write(f"{self.status}\n{self.urlOfRawReport}\n{self.scrapedData}")
+        f.write(f"{self.status}\n{self.date}\n{self.urlOfRawReport}\n{self.scrapedData}")
         f.close()
 
     # getter for all job information
     def getJob(self):
         if self.status == Report.PROCCESSING:
-            return '{"name":"' + self.reportName + '","status":"' + "Processing" + '","submissionDate":"' + "10/20/2000" + '"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Processing" + '","submissionDate":"' + self.date + '"}'
         elif self.status == Report.COMPLETE:
-            return '{"name":"' + self.reportName + '","status":"' + "Complete" + '","submissionDate":"' + "10/20/2000" + '"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Complete" + '","submissionDate":"' + self.date + '"}'
         else:
-            return '{"name":"' + self.reportName + '","status":"' + "Failed" + '","submissionDate":"' + "10/20/2000" + '"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Failed" + '","submissionDate":"' + self.date + '"}'
 
     # delete the report persistent storage
     def delete(self):
@@ -91,3 +92,4 @@ class Report:
         self.status = int(s)
         self.urlOfRawReport = r
         self.scrapedData = sc
+

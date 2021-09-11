@@ -1,4 +1,5 @@
 import os
+import datetime
 
 from Report import Report
 
@@ -25,11 +26,12 @@ class ReportDAO:
                     parts = filepath.split("/")
                     # read data from file
                     status = f.readline().strip()
+                    date = f.readline().strip()
                     raw = f.readline().strip()
                     scraped = f.readline().strip()
                     f.close()
                     # create report object
-                    report = Report(parts[-2], parts[-3], int(status), raw, scraped)
+                    report = Report(parts[-2], parts[-3], date, int(status), raw, scraped)
                     # add object to list
                     self.reports.append(report)
 
@@ -37,7 +39,10 @@ class ReportDAO:
 
     # create a new report object is status: processing and no urls and add it to the list
     def addReport(self, name, coursecode):
-        report = Report(name, coursecode, 0, "none", "none")
+        fulldate = datetime.datetime.now()
+        date = str(fulldate.year) + "/" + "{:02d}".format(fulldate.month) + "/" + "{:02d}".format(fulldate.day) + " - " + "{:02d}".format(
+            fulldate.hour) + ":" + "{:02d}".format(fulldate.minute)
+        report = Report(name, coursecode, date, 0, "none", "none")
         self.reports.append(report)
 
     # search the list and return the index of the report object desired
@@ -90,3 +95,8 @@ class ReportDAO:
             self.reports[index].jobFailed()
         else:
             self.reports[index].addJobCompleteInfo(url, data)
+
+if __name__ == "__main__":
+    rd = ReportDAO()
+    rd.addReport("job", "course")
+    print(rd.getAllJobs("course"))
