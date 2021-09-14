@@ -150,7 +150,7 @@ def getemails():
     if userDao.userExists(coursecode):
         if userDao.signIn(coursecode, password):
             emails = userDao.getUserEmail(coursecode)
-            send = "No emails"
+            send = '"No emails"'
             #CAREFUL this is bad code and may break a thing
             if len(emails) > 0:
                 send = str(json.dumps(emails))

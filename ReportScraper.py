@@ -91,6 +91,7 @@ class ReportScraper:
         for f in soup.findAll('font'):
             a = f.find('a')
             h = a['href']
+            # TODO what about 2 digit blocks !? split on #
             block = eval(h[-1:])
             # TODO identify if 2 sets of lines belong to the same block
             lines[0][block] += f.text
