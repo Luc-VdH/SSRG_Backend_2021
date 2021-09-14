@@ -26,7 +26,8 @@ class Job:
         print('Started Job: ' + self.reportName)
         # make calls to helper functions
         self.uploadFilesToMoss()
-        self.scrapeReport()
+        if self.status != -1:
+            self.scrapeReport()
         self.updateReportDAO()
         if self.email:
             self.emailJobComplete()
