@@ -96,7 +96,10 @@ class Job:
         data = json.dumps(data)
         data = data.encode()
         # send the request
-        r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
+        context = ('ssl/certificate.crt', 'ssl/private.key')
+        # r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
+        r = request.urlopen(req, data=data, context=context)
+
         content = r.read()
         print(content)
         print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
@@ -125,7 +128,9 @@ class Job:
         data = json.dumps(data)
         data = data.encode()
         # send the request
-        r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
+        context = ('ssl/certificate.crt', 'ssl/private.key')
+        # r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
+        r = request.urlopen(req, data=data, context=context)
         content = r.read()
         print(content)
         print(f'Sending Emails.')
