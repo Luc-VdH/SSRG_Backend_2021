@@ -229,7 +229,7 @@ def receiveFile():
     password = header.get('password', '')
     coursecode = header.get('coursecode', '')
     # get job name and moss flags from the json/body
-    jobname = re.escape(data.get('jobname', ''))
+    jobname = data.get('jobname', '').replace(' ', '_')
     flag = data.get('flag', '')
     email = data.get('email', '')
     
