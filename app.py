@@ -343,11 +343,13 @@ def getreport():
     access = userDao.signIn(coursecode, password)
     if access == 1:
         # TODO check if the report exists / the job has completed
-        reporturl, data = reportDAO.getReport(jobname, coursecode)
+        reporturl, data, status = reportDAO.getReport(jobname, coursecode)
         if reporturl == "no course":
             return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 404))
         elif reporturl == "incomplete":
             return _corsify_actual_response(make_response('{"error": "Job is not complete or has failed"}', 401))
+        elif status == -1:
+            return _corsify_actual_response(make_response('{"error": "' + reporturl+'"}' , 200))
         else:
             return _corsify_actual_response(make_response('{"rawurl": "' + reporturl + '", ' + data + '}' , 200))
     # send error response that the password is incomplete

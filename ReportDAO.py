@@ -68,7 +68,7 @@ class ReportDAO:
         if index == -1:
             # return junk address if the report cant be found TODO account for failed/incomplete jobs
             return "no course"
-        return self.reports[index].getRawReport(), self.reports[index].getScrappedReport()  # TODO: scraped
+        return self.reports[index].getRawReport(), self.reports[index].getScrappedReport(), self.reports[index].getStatus()  # TODO: scraped
 
     # delete a report based on its name and coursecode
     def deleteReport(self, name, coursecode):
