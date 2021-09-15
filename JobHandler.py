@@ -19,7 +19,7 @@ class JobHandler:
     def createJob(files, reportName, username, flags, batch, email, mossID):
         archiver = Archiver()
         print(files)
-        report = re.escape(reportName)
+        report = '"' + reportName + '"'
         # call the archiver
         archived = archiver.formatArchive(files, username, report, batch)
         # start the job
