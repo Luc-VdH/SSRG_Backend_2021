@@ -78,7 +78,7 @@ class Job:
             host = "0.0.0.0:8000"
 
         # build a request url
-        url = f"http://{host}/updatereport"
+        url = f"https://{host}/updatereport"
         print(url)
         # build the request
         req = request.Request(url, method="POST")
@@ -109,7 +109,7 @@ class Job:
             host = "0.0.0.0:8000"
 
         # build a request url
-        url = f"http://{host}/sendemails"
+        url = f"https://{host}/sendemails"
         
         # build the request
         req = request.Request(url, method="POST")
