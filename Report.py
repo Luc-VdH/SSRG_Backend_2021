@@ -81,7 +81,7 @@ class Report:
         elif self.status == Report.COMPLETE:
             return '{"name":"' + self.reportName + '","status":"' + "Complete" + '","submissionDate":"' + self.date + '"}'
         else:
-            return '{"name":"' + self.reportName + '","status":"' + "Failed" + '","submissionDate":"' + self.date + '"}'
+            return '{"name":"' + self.reportName + '","status":"' + "Failed" + '","submissionDate":"' + self.date + '","errorMessage":"' + self.urlOfRawReport + '"}'
 
     # delete the report persistent storage
     def delete(self):

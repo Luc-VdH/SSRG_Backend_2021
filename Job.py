@@ -44,22 +44,23 @@ class Job:
         # build run command string
         try:
             cmd = f"./moss -l {self.flag} -d {self.files}/*/*"
+            # run the command
+            p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
+            # wait for it to finish
+            p.wait()
+            # get the output from the script
+            out, err = p.communicate()
+            word = out.decode("utf-8")
+            print(word)
+            # extract the url from the output
+            url = "http" + (word.split("http")[-1])
+            print(url)
+            # save the url
+            self.urlOfRawReport = url.strip()
         except:
             print("Moss Upload Failed")
             self.status = -1
-        # run the command
-        p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
-        # wait for it to finish
-        p.wait()
-        # get the output from the script
-        out, err = p.communicate()
-        word = out.decode("utf-8")
-        print(word)
-        # extract the url from the output
-        url = "http" + (word.split("http")[-1])
-        print(url)
-        # save the url
-        self.urlOfRawReport = url.strip()
+            self.urlOfRawReport = word
         # check if the job has failed
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:7] != "http://":
             # self.report.jobFailed()
