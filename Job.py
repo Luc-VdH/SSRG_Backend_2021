@@ -23,7 +23,7 @@ class Job:
         self.urlOfRawReport = ''
         self.scrapedData = ''
         self.status = 1
-        self.retry = 10
+        self.retry = 1
 
     # start the job, this is called and run in celery
     def start(self):
@@ -64,7 +64,7 @@ class Job:
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:7] != "http://":
             # self.report.jobFailed()
             print(f'Job Failed: {self.urlOfRawReport}')
-            self.urlOfRawReport = ''
+            self.urlOfRawReport = word
             self.status = -1
             #reduce retries amount available
             self.retry -= 1

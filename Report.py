@@ -45,6 +45,10 @@ class Report:
     def checkStatus(self):
         return self.status
 
+    # status getter
+    def getStatus(self):
+        return self.status
+
     # set status to failed and update file
     def jobFailed(self):
         self.status = Report.FAILED
