@@ -39,9 +39,14 @@ class Job:
 
     # runs the moss script
     def uploadFilesToMoss(self):
-        print('Files Uploading: '+self.files+"\nAttempt"+(11-self.retry))
+        attempt = str(11-self.retry)
+        print('Files Uploading: '+self.files+"\nAttempt"+attempt)
         # build run command string
-        cmd = f"./moss -l {self.flag} -d {self.files}/*/*"
+        try:
+            cmd = f"./moss -l {self.flag} -d {self.files}/*/*"
+        except:
+            print("Moss Upload Failed")
+            self.status = -1
         # run the command
         p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
         # wait for it to finish
