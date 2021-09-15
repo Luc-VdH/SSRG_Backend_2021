@@ -19,12 +19,9 @@ class JobHandler:
     def createJob(files, reportName, username, flags, batch, email, mossID):
         archiver = Archiver()
         print(files)
-        if ' ' in reportName:
-            report = '"' + reportName + '"'
-        else:
-            report = reportName
+
         # call the archiver
-        archived = archiver.formatArchive(files, username, report, batch)
+        archived = archiver.formatArchive(files, username, reportName, batch)
         # start the job
-        job = Job(archived, report, username, flags, email, mossID)
+        job = Job(archived, reportName, username, flags, email, mossID)
         job.start()

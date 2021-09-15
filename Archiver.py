@@ -23,7 +23,7 @@ class Archiver:
                 os.system(f"rm -r {pathdir}/*")  
               
         if batch != '':
-            zippath = './job_src/' + coursecode + '/' + re.escape(jobname) 
+            # zippath = './job_src/' + coursecode + '/' + re.escape(jobname)
             os.system(f'unzip "{path}/{batch}" -d "{path}/temp" >/dev/null')#unzip to /temp
             #for f in os.listdir(os.path.join(path,"temp",os.path.splitext(batch)[0])):
             #    shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0], f), os.path.join(pathdir, f))

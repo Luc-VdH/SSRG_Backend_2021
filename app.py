@@ -1,5 +1,6 @@
 import json
 import os
+import re
 import subprocess
 
 from flask import Flask, request, jsonify, make_response
@@ -228,7 +229,7 @@ def receiveFile():
     password = header.get('password', '')
     coursecode = header.get('coursecode', '')
     # get job name and moss flags from the json/body
-    jobname = data.get('jobname', '')
+    jobname = re.escape(data.get('jobname', ''))
     flag = data.get('flag', '')
     email = data.get('email', '')
     
