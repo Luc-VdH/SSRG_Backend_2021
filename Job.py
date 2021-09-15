@@ -96,7 +96,10 @@ class Job:
         data = json.dumps(data)
         data = data.encode()
         # send the request
-        context = ('ssl/certificate.crt', 'ssl/private.key')
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+        context.verify_mode = ssl.CERT_OPTIONAL
+        context.check_hostname = False
+        context.load_verify_locations(cafile=certifi.where())
         # r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
         r = request.urlopen(req, data=data, context=context)
 
@@ -128,7 +131,10 @@ class Job:
         data = json.dumps(data)
         data = data.encode()
         # send the request
-        context = ('ssl/certificate.crt', 'ssl/private.key')
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS)
+        context.verify_mode = ssl.CERT_OPTIONAL
+        context.check_hostname = False
+        context.load_verify_locations(cafile=certifi.where())
         # r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
         r = request.urlopen(req, data=data, context=context)
         content = r.read()
