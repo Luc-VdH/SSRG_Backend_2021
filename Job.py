@@ -39,7 +39,7 @@ class Job:
 
     # runs the moss script
     def uploadFilesToMoss(self):
-        print('Files Uploading: '+self.files)
+        print('Files Uploading: '+self.files+"\nAttempt"+(11-self.retry))
         # build run command string
         cmd = f"./moss -l {self.flag} -d {self.files}/*/*"
         # run the command
@@ -65,6 +65,8 @@ class Job:
             self.retry -= 1
             #if there havent been 10 retries, try again
             if self.retry > 0:
+                #retry every hour
+                sleep(3600)
                 self.uploadFilesToMoss()
         # TODO Handle
         else:
