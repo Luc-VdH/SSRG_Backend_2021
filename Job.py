@@ -2,6 +2,8 @@ from ReportScraper import ReportScraper
 import subprocess
 from urllib import request
 import json
+import ssl
+import certifi
 
 from time import sleep
 
@@ -94,7 +96,7 @@ class Job:
         data = json.dumps(data)
         data = data.encode()
         # send the request
-        r = request.urlopen(req, data=data)
+        r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
         content = r.read()
         print(content)
         print(f'Updated ReportDAO. \nUrlOfRawReport set to:{self.urlOfRawReport}')
@@ -123,7 +125,7 @@ class Job:
         data = json.dumps(data)
         data = data.encode()
         # send the request
-        r = request.urlopen(req, data=data)
+        r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
         content = r.read()
         print(content)
         print(f'Sending Emails.')
