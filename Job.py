@@ -97,9 +97,9 @@ class Job:
         data = data.encode()
         # send the request
         context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-        context.verify_mode = ssl.CERT_OPTIONAL
+        context.verify_mode = ssl.CERT_NONE
         context.check_hostname = False
-        context.load_verify_locations(cafile=certifi.where())
+        # context.load_verify_locations(cafile=certifi.where())
         # r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
         r = request.urlopen(req, data=data, context=context)
 
@@ -132,9 +132,9 @@ class Job:
         data = data.encode()
         # send the request
         context = ssl.SSLContext(ssl.PROTOCOL_TLS)
-        context.verify_mode = ssl.CERT_OPTIONAL
+        context.verify_mode = ssl.CERT_NONE
         context.check_hostname = False
-        context.load_verify_locations(cafile=certifi.where())
+        # context.load_verify_locations(cafile=certifi.where())
         # r = request.urlopen(req, data=data, context=ssl.create_default_context(cafile=certifi.where()))
         r = request.urlopen(req, data=data, context=context)
         content = r.read()
