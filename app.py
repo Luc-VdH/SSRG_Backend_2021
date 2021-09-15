@@ -284,7 +284,7 @@ def receiveFile():
         # instruct reportDAO to make a new report object with status in progress
         reportDAO.addReport(jobname, coursecode)
         # instruct the job handler to start the job
-        jobHandler.createJob.delay(files, jobname, coursecode, flag, batch, email) #TODO: Get SendEmail
+        jobHandler.createJob.delay(files, jobname, coursecode, flag, batch, email, userDao.getUserMossid(coursecode)) #TODO: Get SendEmail
         
         # respond that the job was successfully started
         return _corsify_actual_response(

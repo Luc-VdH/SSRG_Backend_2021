@@ -14,11 +14,11 @@ class JobHandler:
 
     # calls archiver then starts a new job in celery
     @app.task
-    def createJob(files, reportName, username, flags, batch, email):
+    def createJob(files, reportName, username, flags, batch, email, mossID):
         archiver = Archiver()
         print(files)
         # call the archiver TODO functional archiver
         archived = archiver.formatArchive(files, username, reportName, batch)
         # start the job
-        job = Job(archived, reportName, username, flags, email)
+        job = Job(archived, reportName, username, flags, email, mossID)
         job.start()

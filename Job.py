@@ -12,16 +12,18 @@ from time import sleep
 class Job:
 
     # constructor
-    def __init__(self, files, reportName, username, flag, email):
+    def __init__(self, files, reportName, username, flag, email, mossID):
         self.files = files
         self.reportName = reportName
         self.username = username
         self.flag = flag
         self.email = email
+        self.mossID = mossID
 
         self.urlOfRawReport = ''
         self.scrapedData = ''
         self.status = 1
+        self.retry = 10
 
     # start the job, this is called and run in celery
     def start(self):
@@ -59,6 +61,11 @@ class Job:
             print(f'Job Failed: {self.urlOfRawReport}')
             self.urlOfRawReport = ''
             self.status = -1
+            #reduce retries amount available
+            self.retry -= 1
+            #if there havent been 10 retries, try again
+            if self.retry > 0:
+                self.uploadFilesToMoss()
         # TODO Handle
         else:
             print('Received Moss Response\nURL set to ' + self.urlOfRawReport)
