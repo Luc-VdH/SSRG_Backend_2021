@@ -40,9 +40,10 @@ class ReportScraper:
             index = s[a].text.find("%")
             if index != -1:
                 href = s[a]['href']
-                file1 = s[a].text[:-6]
-                file2 = s[a + 1].text[:-6]
-                percent = s[a].text[-4:-1]
+                file1 = s[a].text.split(' ')[0]
+                file2 = s[a + 1].text.split(' ')[0]
+                percent = s[a].text.split('(')[-1]
+                percent = percent[:-1]
                 # a += 2
                 print("scraping match...")
                 count += 1
@@ -133,8 +134,8 @@ class ReportScraper:
 if __name__ == "__main__":
     # rs = ReportScraper("http://moss.stanford.edu/results/7/3579624107546/")
     # rs = ReportScraper("http://moss.stanford.edu/results/2/4286344033639")
-    # rs = ReportScraper("http://moss.stanford.edu/results/7/9634195485591")
+    rs = ReportScraper("http://moss.stanford.edu/results/4/9008436724926/")
 
-    rs = ReportScraper(" http://moss.stanford.edu/results/3/4277668591562")
+    # rs = ReportScraper(" http://moss.stanford.edu/results/3/4277668591562")
     rs.scrapeReport()
     print(rs.toString())
