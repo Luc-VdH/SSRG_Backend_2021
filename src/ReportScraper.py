@@ -122,11 +122,14 @@ class ReportScraper:
         return lines
 
     def toString(self):
-        out = '"matches": ['
-        for m in self.__matches:
-            out += m.toString() + ", "
-        out = out[:-2]
-        out += ']'
+        if self.__matches != []:
+            out = '"matches": ['
+            for m in self.__matches:
+                out += m.toString() + ", "
+            out = out[:-2]
+            out += ']'
+        else:
+            out = '"matches": "no matches"'
         return out
 
 
