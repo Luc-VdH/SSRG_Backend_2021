@@ -64,7 +64,9 @@ class Report:
     # writes all fields to a file
     def writeToFile(self):
         # create a path to the report files
-        path = os.path.join("reports", self.coursecode, self.reportName)
+
+        path = os.path.join("./reports", self.coursecode, self.reportName)
+
         # make the directory if it does not exist
         if not os.path.exists(path):
             print('Making directory: ' + path)
