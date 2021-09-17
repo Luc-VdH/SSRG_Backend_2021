@@ -1,7 +1,7 @@
 import os
 import datetime
 
-from Report import Report
+from src.Report import Report
 
 
 # class for managing all reports
