@@ -232,8 +232,8 @@ def receiveFile():
     jobname = data.get('jobname', '').replace(' ', '_')
     flag = data.get('flag', '')
     email = data.get('email', '')
-    
-    path = os.path.join("job_src", coursecode, jobname)
+
+    path = os.path.join("../job_src", coursecode, jobname)
     
     batch = request.files.getlist('batch')#TODO: get Batch
     print(batch)
