@@ -1,4 +1,4 @@
-from src.ReportScraper import ReportScraper
+from ReportScraper import ReportScraper
 import subprocess
 from urllib import request
 import json

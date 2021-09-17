@@ -5,10 +5,10 @@ import subprocess
 
 from flask import Flask, request, jsonify, make_response
 
-from src.JobHandler import JobHandler
-from src.UserDAO import UserDAO
-from src.ReportDAO import ReportDAO
-from src.Email import Email
+from JobHandler import JobHandler
+from UserDAO import UserDAO
+from ReportDAO import ReportDAO
+from Email import Email
 
 app = Flask(__name__)
 

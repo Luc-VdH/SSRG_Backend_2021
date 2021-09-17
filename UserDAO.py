@@ -1,4 +1,4 @@
-from src.User import User
+from User import User
 import os.path
 
 
