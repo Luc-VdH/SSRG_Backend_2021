@@ -2,8 +2,8 @@ import re
 
 from celery import Celery
 
-from src.Archiver import Archiver
-from src.Job import Job
+from Archiver import Archiver
+from Job import Job
 
 app = Celery('createJob', broker='amqp://guest@localhost//')
 
