@@ -70,7 +70,7 @@ class Report:
             print('Making directory: ' + path)
             os.makedirs(path)
         # write fields to file names reportObject.txt in the directory
-        f = open(f"reports/{self.coursecode}/{self.reportName}/reportObject.txt", "w")
+        f = open(f"../reports/{self.coursecode}/{self.reportName}/reportObject.txt", "w")
         f.write(f"{self.status}\n{self.date}\n{self.urlOfRawReport}\n{self.scrapedData}")
         f.close()
 
@@ -85,7 +85,7 @@ class Report:
 
     # delete the report persistent storage
     def delete(self):
-        os.remove(f"reports/{self.coursecode}/{self.reportName}.txt")
+        os.remove(f"../reports/{self.coursecode}/{self.reportName}.txt")
 
     # read the object file to update values of object
     def refresh(self):
