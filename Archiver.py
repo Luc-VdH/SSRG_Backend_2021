@@ -16,7 +16,7 @@ class Archiver:
 
         path = os.path.join("..", "job_src", coursecode, jobname)
         zippath = os.path.join("..", "job_src", coursecode, jobname)
-        pathdir = os.path.join(".", "job_src", coursecode, jobname, "archive")
+        pathdir = os.path.join("..", "job_src", coursecode, jobname, "archive")
 
         if not os.path.exists(pathdir):
             os.makedirs(pathdir)
