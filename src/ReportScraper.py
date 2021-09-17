@@ -2,7 +2,7 @@ import urllib.request
 from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
-from Match import Match
+from src.Match import Match
 from webdriver_manager.chrome import ChromeDriverManager
 
 # class for scraping moss for report information / html files
