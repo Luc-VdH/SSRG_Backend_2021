@@ -1,8 +1,8 @@
-### To run the webserver:
+### To run the webserver (from the ssrg_backend directory):
 
 	make sure flask is installed, run: pip3 install flask
 
-	run the app.py script: python3 app.py
+	run the app.py script: python3 src/app.py
 	this will start up the server similar to npm start
 
 	open the browser and go to localhost:8000 to view the text returned from the server
@@ -16,7 +16,7 @@
 * chmod +x aws.sh
 * ./aws.sh
 
-### To run Celery
+### To run Celery (from within the src directory):
     need to download rabbitmq and celery:
         sudo apt-get install rabbitmq-server
         pip install celery
