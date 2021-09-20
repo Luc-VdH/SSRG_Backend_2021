@@ -1,7 +1,12 @@
 import os
 import datetime
+import subprocess
 
-from Report import Report
+location = subprocess.check_output("pwd", shell=True).decode("utf-8")
+if "ssrg_backend/test" in location:
+    from src.Report import Report
+else:
+    from Report import Report
 
 
 # class for managing all reports
@@ -9,7 +14,8 @@ class ReportDAO:
     # constructor
     def __init__(self):
         self.reports = []
-        self.initReports()
+        if "ssrg_backend/test" not in location:
+            self.initReports()
 
     # read all report object files and populate list of report objects
     def initReports(self):
@@ -59,7 +65,7 @@ class ReportDAO:
         index = self.getReportIndex(name, coursecode)
         if index == -1:
             return -10
-        self.reports[index].refresh()
+        # self.reports[index].refresh()
         return self.reports[index].checkStatus()
 
     # get the raw moss url of a report
