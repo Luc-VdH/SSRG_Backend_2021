@@ -1,3 +1,5 @@
+import os
+
 from src.User import User
 import unittest
 
@@ -21,4 +23,18 @@ class TestUser(unittest.TestCase):
 
     def test_emails(self):
         user = User("username", "password", "mossid")
+        emails = []
+        self.assertEqual(user.getEmails(), emails)
+        emails.append("test@gmail.com")
+        user.addEmail("test@gmail.com")
+        emails.append("test2@gmail.com")
+        user.addEmail("test2@gmail.com")
+        self.assertEqual(user.getEmails(), emails)
+        emails.remove("test2@gmail.com")
+        user.removeEmail("test2@gmail.com")
+        self.assertEqual(user.getEmails(), emails)
+        user.clearEmails()
+        self.assertEqual(user.getEmails(), [])
+
+
 

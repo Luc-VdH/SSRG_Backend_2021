@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from Match import Match
 from webdriver_manager.chrome import ChromeDriverManager
 
+
 # class for scraping moss for report information / html files
 class ReportScraper:
     def __init__(self, url):
@@ -32,8 +33,6 @@ class ReportScraper:
         content = r.content
         soup = BeautifulSoup(content, features="html.parser")
         print("scraping index...")
-        count = 0
-        count_mismatch = 0
 
         s = soup.findAll('a', href=True)
         for a in range(0, len(s) - 1, 2):
@@ -45,20 +44,16 @@ class ReportScraper:
                 percent = s[a].text[-4:-1]
                 # a += 2
                 print("scraping match...")
-                count += 1
                 lines = self.scrapeMatch(href)
                 print("creating match...")
                 m = Match(file1, file2, percent)
                 length = min(len(lines[0]), len(lines[1]))
-                if len(lines[0]) != len(lines[1]):
-                    count_mismatch += 1
                 for i in range(0, length):
                     m.addLines(lines[0][i], lines[1][i])
 
                 self.__matches.append(m)
 
         print("done.")
-        print("of", count, "matches,", count_mismatch, "matches were misaligned")
 
     def scrapeMatch(self, url):
 
@@ -88,7 +83,7 @@ class ReportScraper:
             if name not in names:
                 names.append(name)
         blocks = eval(names[-1])
-        for i in range(0, blocks+1):
+        for i in range(0, blocks + 1):
             lines[0].append("")
             lines[1].append("")
 
@@ -139,5 +134,7 @@ if __name__ == "__main__":
     # rs = ReportScraper("http://moss.stanford.edu/results/7/9634195485591")
 
     rs = ReportScraper(" http://moss.stanford.edu/results/3/4277668591562")
-    rs.scrapeReport()
-    print(rs.toString())
+    # rs.scrapeReport()
+    lines = rs.scrapeMatch("http://moss.stanford.edu/results/5/1610896995730/match0.html")
+    print(lines)
+    # print(rs.toString())
