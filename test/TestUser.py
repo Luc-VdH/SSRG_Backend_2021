@@ -36,5 +36,9 @@ class TestUser(unittest.TestCase):
         user.clearEmails()
         self.assertEqual(user.getEmails(), [])
 
-
+    def test_save(self):
+        user = User("unittest", "password", "mossid")
+        user.save()
+        exists = os.path.isfile("usrs/unittest.txt")
+        self.assertEqual(exists, True)
 

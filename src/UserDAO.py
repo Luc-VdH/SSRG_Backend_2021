@@ -1,5 +1,12 @@
-from User import User
 import os.path
+import os
+import subprocess
+
+location = subprocess.check_output("pwd", shell=True).decode("utf-8")
+if "ssrg_backend/test" in location:
+    from src.User import User
+else:
+    from User import User
 
 
 # class for managing user objects
