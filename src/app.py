@@ -235,7 +235,7 @@ def receiveFile():
 
 
     path = os.path.join("./job_src", coursecode, jobname)
-    pathBase = os.path.join("../job_src", coursecode, jobname, "base")
+    pathBase = os.path.join("job_src", coursecode, jobname, "base")
 
     
     batch = request.files.getlist('batch')
@@ -292,6 +292,8 @@ def receiveFile():
                     archive.save(basefile)
         base.rstrip()
         base = base.split()
+        #move back a directory for when run in celery
+        base = [os.path.join('..',x) for x in base]
         print('Base Files: '+", ".join(base))
         
         # check that files were received
