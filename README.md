@@ -22,3 +22,8 @@
         pip install celery
 	in a terminal run:
 		celery -A JobHandler worker --loglevel=info
+		
+### To run Folderizer
+    need to install packages:
+        pip3 install pyunpack
+        pip3 install patool

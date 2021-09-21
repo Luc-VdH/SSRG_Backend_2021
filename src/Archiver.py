@@ -25,24 +25,22 @@ class Archiver:
                 os.system(f"rm -r {pathdir}/*")
 
         if batch != '':
-            # zippath = './job_src/' + coursecode + '/' + re.escape(jobname)
             os.system(f'unzip "{zippath}/{batch}" -d "{zippath}/temp" >/dev/null')  # unzip to /temp
-            # for f in os.listdir(os.path.join(path,"temp",os.path.splitext(batch)[0])):
-            #    shutil.move(os.path.join(path,"temp",os.path.splitext(batch)[0], f), os.path.join(pathdir, f))
+            
             batchname = os.path.splitext(batch)[0]
             shutil.move(os.path.join(path, "temp", batchname),
                         os.path.join(pathdir, batchname))  # move temp/batch to archive/batch
             os.remove(f"{path}/{batch}")  # remove zip
             shutil.rmtree(f"{path}/temp")  # remove temp folder
             os.system(
-                f'python3 folderizer.py {pathdir}/{batchname} {pathdir}/test >/dev/null')  # folderise to archive/test
+                f'python3 folderizer.py {pathdir}/{batchname} {pathdir}/test')  # folderise to archive/test
             shutil.rmtree(os.path.join(pathdir, batchname))  # remove archive/batch
             for f in os.listdir(os.path.join(pathdir, "test")):  # move all from archive/test to arhcive
                 shutil.move(os.path.join(pathdir, "test", f), pathdir)
             shutil.rmtree(os.path.join(pathdir, "test"))  # remove test folder
 
         for f in files:
-            if f == '' or "archive" == f:
+            if f == '' or "archive" == f or f=="base":
                 continue
             print("File: " + f)
             shutil.move(os.path.join(path, f), os.path.join(pathdir, f))

@@ -235,10 +235,13 @@ def receiveFile():
 
 
     path = os.path.join("./job_src", coursecode, jobname)
+    pathBase = os.path.join("../job_src", coursecode, jobname, "base")
 
     
-    batch = request.files.getlist('batch')#TODO: get Batch
+    batch = request.files.getlist('batch')
+    print("Batch Submission: ", end='')
     print(batch)
+    #print("Batch Submission: "+(batch.filename))
     
     # check if the user exists
     exists = userDao.userExists(coursecode)
@@ -262,7 +265,8 @@ def receiveFile():
             batch.save(os.path.join(path, batch.filename))   
             batch = batch.filename
         else:
-            batch = ""    
+            batch = "" 
+               
         files = ''
         # save files to path
         for archive in request.files.getlist('file[]'):
@@ -271,23 +275,36 @@ def receiveFile():
                 files = files + archive.filename + " "
                 if not os.path.exists(os.path.join(path, archive.filename)):
                     archive.save(os.path.join(path, archive.filename))
-        
         files.rstrip()
         files = files.split()
-        print(files)
+        print('Individual Files: '+", ".join(files))
+        
+        if not os.path.exists(pathBase):
+            print('Making directory: ' + pathBase)
+            os.makedirs(pathBase)
+        base = ''            
+        # save base files to path
+        for archive in request.files.getlist('base[]'):
+            if archive.filename != '':
+                basefile = os.path.join(pathBase, archive.filename)
+                base = base + basefile + " "
+                if not os.path.exists(basefile):
+                    archive.save(basefile)
+        base.rstrip()
+        base = base.split()
+        print('Base Files: '+", ".join(base))
         
         # check that files were received
         if not files_found and batch==[]:
             # respond with error if none were received
             return _corsify_actual_response(
                 make_response('{"error": "No files found, please upload source code files."}', 404))
-
-        # TODO: Archive
+        
 
         # instruct reportDAO to make a new report object with status in progress
         reportDAO.addReport(jobname, coursecode)
         # instruct the job handler to start the job
-        jobHandler.createJob.delay(files, jobname, coursecode, flag, batch, email, userDao.getUserMossid(coursecode)) #TODO: Get SendEmail
+        jobHandler.createJob.delay(files, jobname, coursecode, flag, batch, base, email, userDao.getUserMossid(coursecode)) #TODO: Get SendEmail
         
         # respond that the job was successfully started
         return _corsify_actual_response(
