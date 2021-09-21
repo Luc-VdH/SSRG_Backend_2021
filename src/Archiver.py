@@ -33,7 +33,7 @@ class Archiver:
             os.remove(f"{path}/{batch}")  # remove zip
             shutil.rmtree(f"{path}/temp")  # remove temp folder
             os.system(
-                f'python3 folderizer.py {pathdir}/{batchname} {pathdir}/test')  # folderise to archive/test
+                f'python3 folderizer.py {pathdir}/{batchname} {pathdir}/test >/dev/null')  # folderise to archive/test
             shutil.rmtree(os.path.join(pathdir, batchname))  # remove archive/batch
             for f in os.listdir(os.path.join(pathdir, "test")):  # move all from archive/test to arhcive
                 shutil.move(os.path.join(pathdir, "test", f), pathdir)
@@ -48,7 +48,7 @@ class Archiver:
             os.system(f'unzip "{pathdir}/{f}" -d "{pathdir}/temp" >/dev/null')
             os.remove(f"{pathdir}/{f}")
         if files !=[]:
-            os.system(f'python3 folderizer.py {pathdir}/temp {pathdir}')  # folderise individuals to archive
+            os.system(f'python3 folderizer.py {pathdir}/temp {pathdir} >/dev/null')  # folderise individuals to archive
             shutil.rmtree(f"{pathdir}/temp")
 
         if os.path.exists(pathdir + "/.DS_Store"):
