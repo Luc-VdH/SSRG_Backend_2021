@@ -8,10 +8,11 @@ class Match:
         self.__percent = percent
         self.__lines = [[]]
 
-    def addLines(self, line1, line2):
-        self.__lines.append([line1, line2])
-        if [] in self.__lines:
-            self.__lines.remove([])
+    def addLines(self, lines):
+        # self.__lines.append([line1, line2])
+        # if [] in self.__lines:
+        #     self.__lines.remove([])
+        self.__lines = lines
 
     def toString(self):
         # out = '{"files": ["' + self.__file1 + '", "' + self.__file2 + '"], '

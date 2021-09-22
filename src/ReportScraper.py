@@ -47,9 +47,10 @@ class ReportScraper:
                 lines = self.scrapeMatch(href)
                 print("creating match...")
                 m = Match(file1, file2, percent)
-                length = min(len(lines[0]), len(lines[1]))
-                for i in range(0, length):
-                    m.addLines(lines[0][i], lines[1][i])
+                # length = min(len(lines[0]), len(lines[1]))
+                # for i in range(0, length):
+                #     m.addLines(lines[0][i], lines[1][i])
+                m.addLines(lines)
 
                 self.__matches.append(m)
 
@@ -93,20 +94,32 @@ class ReportScraper:
         r = requests.get(self.urlOfRawReport + "/" + frame0['src'])
         content = r.content
         soup = BeautifulSoup(content, features="html.parser")
+        code0 = soup.find('pre').text
         for f in soup.findAll('font'):
             a = f.find('a')
             h = a['href']
-            # TODO what about 2 digit blocks !? split on #
             # block = eval(h[-1:])
             block = eval(h.split('#')[-1])
-            # TODO identify if 2 sets of lines belong to the same block
             lines[0][block] += f.text
+
+        for i in range(len(lines[0])):
+            code0 = code0.replace(lines[0][i], "`" + str(i) + "§")
+
+        codearr0 = code0.split("§")
+        line1 = []
+        for i in range(len(codearr0) - 1):
+            chunk = codearr0[i].split('`')
+            line1.append({"matchFlag": "none", "line": chunk[0]})
+            if len(chunk) > 0:
+                line1.append({"matchFlag": eval(chunk[1]), "line": lines[0][eval(chunk[1])]})
+        line1.append({"matchFlag": "none", "line": codearr0[-1]})
 
         # self.__driver.get(self.urlOfRawReport + "/" + frame1['src'])
         # content = self.__driver.page_source
         r = requests.get(self.urlOfRawReport + "/" + frame1['src'])
         content = r.content
         soup = BeautifulSoup(content, features="html.parser")
+        code1 = soup.find('pre').text
         for f in soup.findAll('font'):
             a = f.find('a')
             h = a['href']
@@ -114,7 +127,20 @@ class ReportScraper:
             # TODO identify if 2 sets of lines belong to the same block
             lines[1][block] += f.text
 
-        return lines
+        for i in range(len(lines[1])):
+            code1 = code1.replace(lines[1][i], "`" + str(i) + "§")
+
+        codearr1 = code1.split("§")
+        line2 = []
+        for i in range(len(codearr1) - 1):
+            chunk = codearr1[i].split('`')
+            line2.append({"matchFlag": "none", "line": chunk[0]})
+            if len(chunk) > 0:
+                line2.append({"matchFlag": eval(chunk[1]), "line": lines[1][eval(chunk[1])]})
+        line2.append({"matchFlag": "none", "line": codearr1[-1]})
+
+        out = [line1, line2]
+        return out
 
     def toString(self):
         if self.__matches != []:
@@ -134,7 +160,7 @@ if __name__ == "__main__":
     # rs = ReportScraper("http://moss.stanford.edu/results/7/9634195485591")
 
     rs = ReportScraper(" http://moss.stanford.edu/results/3/4277668591562")
-    # rs.scrapeReport()
-    lines = rs.scrapeMatch("http://moss.stanford.edu/results/5/1610896995730/match0.html")
-    print(lines)
-    # print(rs.toString())
+    rs.scrapeReport()
+    # lines = rs.scrapeMatch("http://moss.stanford.edu/results/5/1610896995730/match1.html")
+    # print(lines)
+    print(rs.toString())
