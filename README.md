@@ -20,10 +20,14 @@
     need to download rabbitmq and celery:
         sudo apt-get install rabbitmq-server
         pip install celery
-	in a terminal run:
+	in src dir run:
 		celery -A JobHandler worker --loglevel=info
 		
 ### To run Folderizer
     need to install packages:
         pip3 install pyunpack
         pip3 install patool
+
+### To run UnitTests
+    run command from main dir:
+        python3 -m unittest discover -s test 

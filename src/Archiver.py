@@ -13,7 +13,11 @@ class Archiver:
     # run the extraction and formatting
     def formatArchive(self, files, coursecode, jobname, batch):
         print(files)
-
+        cwd = os.getcwd()
+        if cwd.split("/")[-1]=='ssrg_backend':
+            os.chdir('src')
+        print("Archvier CWD:")
+        print(os.getcwd())
         path = os.path.join("..", "job_src", coursecode, jobname)
         zippath = os.path.join("..", "job_src", coursecode, jobname)
         pathdir = os.path.join("..", "job_src", coursecode, jobname, "archive")

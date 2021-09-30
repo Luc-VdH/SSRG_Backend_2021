@@ -16,10 +16,14 @@ class Email:
         #receiver_email = self.emails  # Enter receiver address
         password = 'cscmail123'
         message = f"Subject: {self.reportName} Job Complete"
-        
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
-            server.login(sender_email, password)
-            for receiver_email in self.emails:
-                server.sendmail(sender_email, receiver_email, message)
+        try:
+            context = ssl.create_default_context()
+            with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
+                server.login(sender_email, password)
+                for receiver_email in self.emails:
+                    server.sendmail(sender_email, receiver_email, message)
+            return True
+        except:
+            print("Email failed to send")
+            return False
 
