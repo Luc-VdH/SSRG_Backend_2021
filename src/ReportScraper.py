@@ -103,7 +103,8 @@ class ReportScraper:
             lines[0][block] += f.text
 
         for i in range(len(lines[0])):
-            code0 = code0.replace(lines[0][i], "`" + str(i) + "§")
+            if lines[0][i] != '':
+                code0 = code0.replace(lines[0][i], "`" + str(i) + "§")
 
         codearr0 = code0.split("§")
         line1 = []
@@ -128,7 +129,8 @@ class ReportScraper:
             lines[1][block] += f.text
 
         for i in range(len(lines[1])):
-            code1 = code1.replace(lines[1][i], "`" + str(i) + "§")
+            if lines[1][i] != '':
+                code1 = code1.replace(lines[1][i], "`" + str(i) + "§")
 
         codearr1 = code1.split("§")
         line2 = []
