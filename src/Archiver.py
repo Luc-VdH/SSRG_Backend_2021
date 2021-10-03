@@ -1,6 +1,7 @@
 import os
 import re
 import shutil
+import traceback
 
 
 # class for extracting source from a vula archive TODO currently not functional
@@ -28,7 +29,7 @@ class Archiver:
             if os.listdir(pathdir) != []:
                 os.system(f"rm -r {pathdir}/*")
         try:
-        if batch != '':
+            if batch != '':
                 os.system(f'unzip "{zippath}/{batch}" -d "{zippath}/temp" >/dev/null')  # unzip to /temp
                 
                 batchname = os.path.splitext(batch)[0]
@@ -42,7 +43,8 @@ class Archiver:
                 for f in os.listdir(os.path.join(pathdir, "test")):  # move all from archive/test to arhcive
                     shutil.move(os.path.join(pathdir, "test", f), pathdir)
                 shutil.rmtree(os.path.join(pathdir, "test"))  # remove test folder
-        except:
+        except Exception:
+            traceback.print_exc()
             return "Invalid Batch Submission Archive"
         
         try:
@@ -57,7 +59,8 @@ class Archiver:
             if files !=[]:
                 os.system(f'python3 folderizer.py {pathdir}/temp {pathdir} >/dev/null')  # folderise individuals to archive
                 shutil.rmtree(f"{pathdir}/temp")
-        except:
+        except Exception:
+            traceback.print_exc()
             return "Invalid Individual submission archives"
 
         if os.path.exists(pathdir + "/.DS_Store"):
