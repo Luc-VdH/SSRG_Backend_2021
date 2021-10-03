@@ -35,7 +35,12 @@ class Job:
     def start(self):
         print('Started Job: ' + self.reportName)
         # make calls to helper functions
-        self.uploadFilesToMoss()
+        if self.files[0:7]!="Invalid":
+            self.uploadFilesToMoss()
+        else:
+            self.urlOfRawReport = self.files
+            print(f'Job Failed: {self.urlOfRawReport}')
+            self.status = -1
         if self.status != -1:
             self.scrapeReport()
         self.updateReportDAO()
