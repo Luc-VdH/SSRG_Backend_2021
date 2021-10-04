@@ -3,6 +3,7 @@ from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
 from webdriver_manager.chrome import ChromeDriverManager
+import os
 
 cwd = os.getcwd()
 if cwd.split("/")[-1]=='ssrg_backend':
