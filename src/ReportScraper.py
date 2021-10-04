@@ -3,14 +3,11 @@ from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
 from webdriver_manager.chrome import ChromeDriverManager
-import os
 
-cwd = os.getcwd()
-if cwd.split("/")[-1]=='src':
-    from src.Match import Match
-else:
+try:
     from Match import Match
-
+except:
+    from src.Match import Match
 
 # class for scraping moss for report information / html files
 class ReportScraper:

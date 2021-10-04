@@ -2,7 +2,11 @@ import shutil, os
 import sys
 import unittest
 
+os.chdir("..")
 from src.Job import Job
+os.chdir("ssrg_backend/src")
+print(os.getcwd())
+
 
 class test_job(unittest.TestCase):
     job = Job("../job_src/test_class/test_correct_All/archive", 

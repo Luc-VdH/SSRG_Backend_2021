@@ -7,17 +7,10 @@ import os
 
 from time import sleep
 
-cwd = os.getcwd()
-if cwd.split("/")[-1]=='ssrg_backend':
-    os.chdir('src')
-    print("Job CWD:")
-    print(os.getcwd())
-    from src.ReportScraper import ReportScraper
-else:
-    print("Job CWD:")
-    print(os.getcwd())
+try:
     from ReportScraper import ReportScraper
-
+except:
+    from src.ReportScraper import ReportScraper
 
 # class for running the moss script in parallel
 class Job:
