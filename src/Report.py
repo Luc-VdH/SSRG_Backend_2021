@@ -50,8 +50,9 @@ class Report:
         return self.status
 
     # set status to failed and update file
-    def jobFailed(self):
+    def jobFailed(self, error):
         self.status = Report.FAILED
+        self.urlOfRawReport = error
         self.writeToFile()
 
     # setter for raw url, updates file

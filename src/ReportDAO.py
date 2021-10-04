@@ -98,7 +98,7 @@ class ReportDAO:
         if index == -1:
             return False
         if status == -1:
-            self.reports[index].jobFailed()
+            self.reports[index].jobFailed(url)
         else:
             self.reports[index].addJobCompleteInfo(url, data)
 
