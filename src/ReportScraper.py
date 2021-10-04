@@ -6,12 +6,13 @@ from webdriver_manager.chrome import ChromeDriverManager
 import os
 
 cwd = os.getcwd()
-if cwd.split("/")[-1]=='ssrg_backend':
-    os.chdir('src')
-    print("Archvier CWD:")
+if cwd.split("/")[-1]=='src':
+    print("ReportSCrapper CWD:")
     print(os.getcwd())
     from src.Match import Match
 else:
+    print("ReportSCrapper CWD:")
+    print(os.getcwd())
     from Match import Match
 
 
