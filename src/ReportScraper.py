@@ -7,12 +7,8 @@ import os
 
 cwd = os.getcwd()
 if cwd.split("/")[-1]=='src':
-    print("ReportSCrapper CWD:")
-    print(os.getcwd())
     from src.Match import Match
 else:
-    print("ReportSCrapper CWD:")
-    print(os.getcwd())
     from Match import Match
 
 
