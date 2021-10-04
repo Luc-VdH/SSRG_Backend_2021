@@ -39,9 +39,12 @@ class ReportScraper:
             index = s[a].text.find("%")
             if index != -1:
                 href = s[a]['href']
-                file1 = s[a].text[:-6]
-                file2 = s[a + 1].text[:-6]
-                percent = s[a].text[-4:-1]
+                # file1 = s[a].text[:-6]
+                file1 = s[a].text.split('(')[0][:-2]
+                # file2 = s[a + 1].text[:-6]
+                file2 = s[a+1].text.split('(')[0][:-2]
+                percent = s[a].text.split("(")[-1][:-1]
+                # percent = s[a].text[-4:-1]
                 # a += 2
                 print("scraping match...")
                 lines = self.scrapeMatch(href)
@@ -124,7 +127,7 @@ class ReportScraper:
         for f in soup.findAll('font'):
             a = f.find('a')
             h = a['href']
-            block = eval(h[-1:])
+            block = eval(h.split('#')[-1])
             # TODO identify if 2 sets of lines belong to the same block
             lines[1][block] += f.text
 
@@ -161,7 +164,7 @@ if __name__ == "__main__":
     # rs = ReportScraper("http://moss.stanford.edu/results/2/4286344033639")
     # rs = ReportScraper("http://moss.stanford.edu/results/7/9634195485591")
 
-    rs = ReportScraper(" http://moss.stanford.edu/results/3/4277668591562")
+    rs = ReportScraper("http://moss.stanford.edu/results/9/5151095819632/")
     rs.scrapeReport()
     # lines = rs.scrapeMatch("http://moss.stanford.edu/results/5/1610896995730/match1.html")
     # print(lines)
