@@ -54,7 +54,7 @@ class Job:
         print('Files Uploading: '+self.files+"\nAttempt"+attempt)
         # build run command string
         try:
-            cmd = f"./moss -l {self.flag} {self.base}-d {self.files}/*/*"
+            cmd = f"./moss -i {self.mossID} -l {self.flag} {self.base}-d {self.files}/*/*"
             print("Running Moss Script: "+cmd)
             # run the command
             p = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE)
