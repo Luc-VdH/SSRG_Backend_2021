@@ -2,8 +2,16 @@ import urllib.request
 from selenium import webdriver
 import requests
 from bs4 import BeautifulSoup
-from Match import Match
 from webdriver_manager.chrome import ChromeDriverManager
+
+cwd = os.getcwd()
+if cwd.split("/")[-1]=='ssrg_backend':
+    os.chdir('src')
+    print("Archvier CWD:")
+    print(os.getcwd())
+    from src.Match import Match
+else:
+    from Match import Match
 
 
 # class for scraping moss for report information / html files
