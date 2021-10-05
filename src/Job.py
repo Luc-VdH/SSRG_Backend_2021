@@ -56,6 +56,7 @@ class Job:
         attempt = str(self.retry)
         print('Files Uploading: '+self.files+"\nAttempt: "+attempt)
         # build run command string
+        mossdown = False
         try:
             #create moss command
             cmd = f"./moss -i {self.mossID} -l {self.flag} {self.base}-d {self.files}/*/*"
@@ -68,6 +69,9 @@ class Job:
             out, err = p.communicate()
             word = out.decode("utf-8")
             print(word)
+
+            if "Connection refused" in word:
+                mossdown = True
             # extract the url from the output
             url = "http" + (word.split("http")[-1])
             # save the url
@@ -81,7 +85,12 @@ class Job:
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:7] != "http://":
             # self.report.jobFailed()
             print(f'Job Failed: {self.urlOfRawReport}')
-            self.urlOfRawReport = word
+            # self.urlOfRawReport = word
+            if not mossdown:
+                self.urlOfRawReport = "No URL returned, please check MOSS ID or files"
+                self.retry = 11
+            else:
+                self.urlOfRawReport = "MOSS servers offline"
             self.status = -1
             #reduce retries amount available
             self.retry += 1
