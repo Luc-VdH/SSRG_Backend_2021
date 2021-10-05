@@ -50,10 +50,10 @@ class Job:
     # deletes the source code
     def deleteCode(self):
         try:
-            shutil.rmtree(self.files)
+            shutil.rmtree(self.files+"/..")
         except:
             print("Unable to delete code")
-            if not os.path.exists(self.files):
+            if not os.path.exists(self.files+"/.."):
                 print("Path does not exist")
 
     # runs the moss script
