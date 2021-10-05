@@ -79,7 +79,7 @@ class Job:
         except:
             print("Moss Upload Failed")
             self.status = -1
-            self.urlOfRawReport = word
+            self.urlOfRawReport = "MOSS Upload Failed"
             return False
         # check if the job has failed
         if self.urlOfRawReport == '' or self.urlOfRawReport[0:7] != "http://":
