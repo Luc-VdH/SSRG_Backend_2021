@@ -4,6 +4,7 @@ import json
 import ssl
 import certifi
 import os
+import shutil
 
 from time import sleep
 
@@ -40,10 +41,20 @@ class Job:
         print('Started Job: ' + self.reportName)
         # make calls to helper functions
         self.uploadFilesToMoss()
+        self.deleteCode()
         self.scrapeReport()
         self.updateReportDAO()
         self.emailJobComplete()
         print('Finished Job: ' + self.reportName)
+        
+    # deletes the source code
+    def deleteCode(self):
+        try:
+            shutil.rmtree(self.files)
+        except:
+            print("Unable to delete code")
+            if not os.path.exists(self.files):
+                print("Path does not exist")
 
     # runs the moss script
     def uploadFilesToMoss(self):
