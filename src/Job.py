@@ -54,7 +54,7 @@ class Job:
         except:
             print("Unable to delete code")
             if not os.path.exists(self.files+"/.."):
-                print("Path does not exist")
+                print("Path does not exist: "+self.files+"/..")
 
     # runs the moss script
     def uploadFilesToMoss(self):
