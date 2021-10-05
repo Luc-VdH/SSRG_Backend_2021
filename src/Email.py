@@ -15,7 +15,7 @@ class Email:
         sender_email = "cscmailaddress@gmail.com"  # Enter your address
         #receiver_email = self.emails  # Enter receiver address
         password = 'cscmail123'
-        message = f"Subject: {self.reportName} Job Complete"
+        message = "Subject: "+self.reportName+" Job Complete"
         try:
             context = ssl.create_default_context()
             with smtplib.SMTP_SSL(smtp_server, port, context=context) as server:
