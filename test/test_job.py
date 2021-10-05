@@ -14,8 +14,8 @@ class test_job(unittest.TestCase):
         ["../job_src/test_class/test_correct_All/base/base1.java", "../job_src/test_class/test_correct_All/base/base2.java"],
         "test_correct_All", "test_class", "cc", True, "795955383")
     #variable used to check if the upload has been done yet
-    uploadComplete = False 
-        
+    uploadComplete = False
+            
     #unittest for the correct behavior of an invalid submission
     def test_Invalid_Upload(self):
         jobFail = Job("Invalid Submission", "", "testFail", "test_class", "cc", False, '795955383')
@@ -26,6 +26,8 @@ class test_job(unittest.TestCase):
             
     #unittest for the correct behavior for uploading a moss submission
     def test_moss(self):
+        if os.getcwd()[-1]=='d':
+            os.chdir('src')
         if test_job.uploadComplete == False:
             test_job.uploadComplete = self.job.uploadFilesToMoss()
         self.assertTrue(test_job.uploadComplete, "Upload Files to Moss Failed: "+self.job.urlOfRawReport)

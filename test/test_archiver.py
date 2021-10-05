@@ -2,19 +2,24 @@ import shutil, os
 import sys
 import unittest
 
-if os.getcwd()[-1] == "ssrg_backend":
-    os.chdir('src')
-from Archiver import Archiver
+try:
+    from Archiver import Archiver
+except:
+    from src.Archiver import Archiver
 print(os.getcwd()[-1])
 if os.getcwd()[-1] == "src":
     os.chdir('..')
-
+if os.getcwd()[-1] == "server":
+    os.chdir('ssrg_backend')
+    
 #unittest class to test the Archiver Class
 class test_archiver(unittest.TestCase):
     #moves the test files into the correct folder to simulate a file upload
     def setupTest(self, folder):
         print("Setting up Test for: "+folder)
         path = os.path.join("test_files", folder)
+        if os.getcwd()[-1]=='c':
+            os.chdir('..')
         jobPath = os.path.join("job_src", "test_class","test_job_"+folder)
         #removes any previous files in the directory
         if os.path.exists(jobPath):
@@ -22,13 +27,17 @@ class test_archiver(unittest.TestCase):
         #copies the files in
         os.makedirs(jobPath)
         os.makedirs(jobPath+"/base")
-        for f in os.listdir(path):
-            shutil.copy(os.path.join(path, f), jobPath)
-            
+        try:
+            for f in os.listdir(path):
+                shutil.copy(os.path.join(path, f), jobPath)
+        except:
+            print("SOMETHING FAILED")
+            print(os.getcwd()[-1])    
     #helper method to check all the correct files are present for a given folder
     def checkIfFilesCorrect(self, folder):
         print("Checking files Correct for: "+folder)
-        os.chdir('..')
+        if os.getcwd()[-1]=='c':
+            os.chdir('..')
         path = os.path.join("job_src", "test_class","test_job_"+folder,"archive")
         pathCorrect = os.path.join("job_src", "test_class","test_correct_"+folder,"archive")
         files = os.listdir(path)
