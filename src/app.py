@@ -46,7 +46,7 @@ def login():
         return _corsify_actual_response(
             make_response('{"status": "Course code found, password correct, access granted!"}', 200))
     # send response that the password was incorrect
-    return _corsify_actual_response(make_response('{"error": "Incorrect password, please try again!"', 401))
+    return _corsify_actual_response(make_response('{"error": "Incorrect password, please try again!"}', 401))
 
 
 # sign up endpoint for new users
