@@ -86,7 +86,7 @@ class Job:
             #reduce retries amount available
             self.retry += 1
             #if there havent been 10 retries, try again
-            if self.retry <= 1:#TODO: Make this 10 to resubmit 10 times
+            if self.retry <= 10:
                 print(self.retry <= 0, self.retry)
                 print("retry")
                 #retry every hour
