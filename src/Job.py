@@ -83,7 +83,7 @@ class Job:
             word = out.decode("utf-8")
             print(word)
 
-            if "Connection refused" in word:
+            if not "Uploading" in word:
                 mossdown = True
             # extract the url from the output
             url = "http" + (word.split("http")[-1])
