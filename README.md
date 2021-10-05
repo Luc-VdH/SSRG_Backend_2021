@@ -29,6 +29,10 @@
         pip install celery
 	in src dir run:
 		celery -A JobHandler worker --loglevel=info
+
+### Packages needed for ReportScraper
+    Install beautiful soup 4:
+    pip3 install bs4
 		
 ### To run Folderizer
     need to install packages:
@@ -40,7 +44,8 @@
         python3 -m unittest discover -s test 
 
 ### To run moss script:
-* chmod ug+x moss
-* ./moss -l java file1 fil2 etc
+    The MOSS script is not stored in git or on the remote repo, it is included with our submission
+    * chmod ug+x moss
+    * ./moss -l java file1 fil2 etc
 
 
