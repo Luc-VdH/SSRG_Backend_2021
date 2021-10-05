@@ -37,7 +37,7 @@ def login():
     exists = userDao.userExists(coursecode)
     if not exists:
         # send response that the user doesnt exist
-        return _corsify_actual_response(make_response('{"error": "Course code not found, please sign up"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found, please sign up"}', 401))
 
     # check if the password matches
     access = userDao.signIn(coursecode, passwordIn)
@@ -112,7 +112,7 @@ def updateuser():
         else:
             return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
     else:
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
 
 @app.route("/getusersettings", methods=['GET', 'OPTIONS'])
@@ -131,11 +131,11 @@ def getsettings():
             if mossid != "not found":
                 return _corsify_actual_response(make_response('{"mossid": "' + mossid + '"}', 200))
             else:
-                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
         else:
             return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
     else:
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
 
 @app.route("/getuseremails", methods=['GET', 'OPTIONS'])
@@ -158,11 +158,11 @@ def getemails():
             if emails != "not found":
                 return _corsify_actual_response(make_response('{"emails": ' + send + '}', 200))
             else:
-                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+                return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
         else:
             return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
     else:
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
 
 @app.route("/addemail", methods=['POST', 'OPTIONS'])
@@ -185,7 +185,7 @@ def addemail():
         else:
             return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
     else:
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
 
 @app.route("/removeemail", methods=['POST', 'OPTIONS'])
@@ -208,7 +208,7 @@ def removeemail():
         else:
             return _corsify_actual_response(make_response('{"error": "password incorrect."}', 401))
     else:
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
 
 # endpoint for submitting a job, receives files and submits job to moss
@@ -247,7 +247,7 @@ def receiveFile():
     exists = userDao.userExists(coursecode)
     if not exists:
         # send error response if the user does not exist
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
     # check password
     access = userDao.signIn(coursecode, password)
@@ -301,7 +301,7 @@ def receiveFile():
         if (not files_found) and (not batch):
             # respond with error if none were received
             return _corsify_actual_response(
-                make_response('{"error": "No files found, please upload source code files."}', 404))
+                make_response('{"error": "No files found, please upload source code files."}', 401))
         
 
         # instruct reportDAO to make a new report object with status in progress
@@ -332,7 +332,7 @@ def getalljobs():
     exists = userDao.userExists(coursecode)
     if not exists:
         # send error response if the user does not exist
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
     # check the password
     access = userDao.signIn(coursecode, password)
@@ -360,7 +360,7 @@ def getreport():
     exists = userDao.userExists(coursecode)
     if not exists:
         # send error response if the user does not
-        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 404))
+        return _corsify_actual_response(make_response('{"error": "Course code not found"}', 401))
 
     # get password from object
     access = userDao.signIn(coursecode, password)
@@ -368,7 +368,7 @@ def getreport():
         # TODO check if the report exists / the job has completed
         reporturl, data, status = reportDAO.getReport(jobname, coursecode)
         if reporturl == "no course":
-            return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 404))
+            return _corsify_actual_response(make_response('{"error": "Coursecode not found"}', 401))
         elif reporturl == "incomplete":
             return _corsify_actual_response(make_response('{"error": "Job is not complete or has failed"}', 401))
         elif status == -1:
