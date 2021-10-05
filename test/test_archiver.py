@@ -2,7 +2,9 @@ import shutil, os
 import sys
 import unittest
 
-from src.Archiver import Archiver
+if os.getcwd()[-1] == "ssrg_backend":
+    os.chdir('src')
+from Archiver import Archiver
 print(os.getcwd()[-1])
 if os.getcwd()[-1] == "src":
     os.chdir('..')
