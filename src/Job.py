@@ -49,12 +49,14 @@ class Job:
         
     # deletes the source code
     def deleteCode(self):
+        #tried to delete the folder
+        path = os.path.join("job_src", self.username, self.reportName)
         try:
-            shutil.rmtree(self.files+"/..")
+            shutil.rmtree(path)
         except:
             print("Unable to delete code")
-            if not os.path.exists(self.files+"/.."):
-                print("Path does not exist: "+self.files+"/..")
+            if not os.path.exists(self.files):
+                print("Path does not exist: "+path)
 
     # runs the moss script
     def uploadFilesToMoss(self):
