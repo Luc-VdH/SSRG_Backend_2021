@@ -303,7 +303,10 @@ def receiveFile():
             return _corsify_actual_response(
                 make_response('{"error": "No files found, please upload source code files."}', 401))
         
-
+        # check if a job with that name already exists, if so return error
+        if reportDAO.getReportIndex(jobname, coursecode) != -1:
+            return _corsify_actual_response(
+                make_response('{"error": "A job with that name already exists."}', 401))
         # instruct reportDAO to make a new report object with status in progress
         reportDAO.addReport(jobname, coursecode)
         # instruct the job handler to start the job
