@@ -32,14 +32,14 @@ class UserDAO:
             return 1
         else:
             return 0
-
+    # get all the emails for a user
     def getUserEmail(self, coursecode):
         index = self.getUserIndex(coursecode)
         if index != -1:
             return self.__users[index].getEmails()
         else:
             return "not found"
-
+    # add an email address to a user's array of emails and save the changes to the text file
     def addUserEmail(self, coursecode, email):
         index = self.getUserIndex(coursecode)
         if index != -1:
@@ -49,6 +49,7 @@ class UserDAO:
         else:
             return "not found"
 
+    # remove an email from a user's list of emails
     def removeUserEmail(self, coursecode, email):
         index = self.getUserIndex(coursecode)
         if index != -1:
@@ -58,6 +59,7 @@ class UserDAO:
         else:
             return "not found"
 
+    # get the moss id of a user
     def getUserMossid(self, coursecode):
         index = self.getUserIndex(coursecode)
         if index != -1:
@@ -65,6 +67,7 @@ class UserDAO:
         else:
             return "not found"
 
+    # delete a user (may not be in use, but created for future use if desired
     def deleteUser(self, coursecode, password):
         index = self.getUserIndex(coursecode)
         if self.signIn(coursecode, password):
@@ -74,7 +77,7 @@ class UserDAO:
         else:
             return 0
 
-    # TODO update user info
+    # update the password and mossid for a user
     def updateUserInfo(self, coursecode, password, mossid):
         index = self.getUserIndex(coursecode)
         if index != -1:
