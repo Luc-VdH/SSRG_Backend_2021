@@ -4,7 +4,7 @@ import shutil
 import traceback
 
 
-# class for extracting source from a vula archive TODO currently not functional
+# class for extracting source from a vula archive
 class Archiver:
     # constructor
     def __init__(self):

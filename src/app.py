@@ -257,7 +257,8 @@ def receiveFile():
         if not os.path.exists(path):
             print('Making directory: ' + path)
             os.makedirs(path)
-            
+        
+        #saves the batch submissions to path    
         if batch != []:
             batch = batch[0]
             if os.path.exists(os.path.join(path, batch.filename)):

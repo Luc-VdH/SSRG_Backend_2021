@@ -47,15 +47,17 @@ class Job:
 
     # runs the moss script
     def uploadFilesToMoss(self):
+        #checks if the files were valid (done in the archiver class)
         if self.files[0:7]=="Invalid":
             self.urlOfRawReport = self.files
             print(f'Job Failed: {self.urlOfRawReport}')
             self.status = -1
             return False
         attempt = str(self.retry)
-        print('Files Uploading: '+self.files+"\nAttempt"+attempt)
+        print('Files Uploading: '+self.files+"\nAttempt: "+attempt)
         # build run command string
         try:
+            #create moss command
             cmd = f"./moss -i {self.mossID} -l {self.flag} {self.base}-d {self.files}/*/*"
             print("Running Moss Script: "+cmd)
             # run the command
@@ -68,7 +70,6 @@ class Job:
             print(word)
             # extract the url from the output
             url = "http" + (word.split("http")[-1])
-            print(url)
             # save the url
             self.urlOfRawReport = url.strip()
         except:
@@ -83,9 +84,11 @@ class Job:
             self.urlOfRawReport = word
             self.status = -1
             #reduce retries amount available
-            self.retry -= 1
+            self.retry += 1
             #if there havent been 10 retries, try again
-            if self.retry > 0:
+            if self.retry <= 1:#TODO: Make this 10 to resubmit 10 times
+                print(self.retry <= 0, self.retry)
+                print("retry")
                 #retry every hour
                 sleep(3600)
                 self.uploadFilesToMoss()
