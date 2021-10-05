@@ -298,7 +298,7 @@ def receiveFile():
         print('Base Files: '+", ".join(base))
         
         # check that files were received
-        if not files_found and batch==[]:
+        if (not files_found) or batch==[]:
             # respond with error if none were received
             return _corsify_actual_response(
                 make_response('{"error": "No files found, please upload source code files."}', 404))
