@@ -50,7 +50,7 @@ class Job:
     # deletes the source code
     def deleteCode(self):
         #tried to delete the folder
-        path = os.path.join("job_src", self.username, self.reportName)
+        path = os.path.join("..","job_src", self.username, self.reportName)
         try:
             shutil.rmtree(path)
         except:
