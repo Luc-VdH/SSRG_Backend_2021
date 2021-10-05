@@ -191,7 +191,7 @@ class Job:
             req.add_header('Content-Type', 'application/json')
             data = {
                 "id": "BackendSSRG1",
-                "reportName": self.reportName.replace('"', ''),
+                "reportname": self.reportName.replace('"', ''),
                 "coursecode": self.username,
                 "status": self.status,
             }
